@@ -1,0 +1,157 @@
+id: rag-documents
+title: "RAG System na DocuMind"
+description: "Você entrou como AI Engineer na DocuMind, uma startup que quer revolucionar como empresas interagem com seus documentos internos. O problema: empresas têm milhares de PDFs, wikis, e docs que ninguém encontra. Sua missão: construir um sistema RAG (Retrieval Augmented Generation) que permite fazer perguntas em linguagem natural e receber respostas baseadas nos documentos da empresa."
+category: ai-engineer
+stack:
+  - Python
+  - LangChain
+  - OpenAI API
+  - ChromaDB
+  - FastAPI
+difficulty: beginner
+estimatedHours: 10
+totalTasks: 8
+
+context:
+  company: "DocuMind"
+  role: "AI Engineer"
+  team:
+    - name: "Rafael"
+      role: "CTO"
+      description: "Seu gestor. Ex-Google, especialista em NLP. Vai te guiar na arquitetura."
+    - name: "Carla"
+      role: "Product Manager"
+      description: "Interface com clientes. Quer um MVP funcional pra demonstrar pro primeiro cliente."
+    - name: "Cliente Piloto: TechCorp"
+      role: "Empresa de tecnologia"
+      description: "Tem 10 mil documentos internos. Funcionários perdem 2h/dia procurando informação."
+  situation: "A TechCorp tá desesperada. Tem wikis, Confluence, Google Docs, PDFs em pastas. Quando um funcionário novo entra, leva 3 meses pra saber onde achar as coisas. O ChatGPT sozinho não resolve porque não conhece os documentos internos. RAG é a solução - combina busca semântica com geração de texto. Você vai construir o primeiro protótipo."
+
+tasks:
+  - id: 1
+    title: "Fundamentos de RAG"
+    description: "Primeiro dia! O Rafael marcou uma sessão: 'Antes de codar, precisa entender como RAG funciona. Embeddings, vector stores, retrieval, generation. É o padrão de facto pra fazer LLMs responderem sobre documentos próprios.' Onboarding técnico."
+    context: "Fundamentos. Rafael: 'RAG parece mágico, mas é bem lógico. Entende cada peça antes de juntar.'"
+    steps:
+      - "Entender o problema: por que LLMs não conhecem docs privados"
+      - "Estudar conceito de embeddings (representação vetorial de texto)"
+      - "Entender vector stores e busca por similaridade"
+      - "Estudar o fluxo RAG: query -> retrieval -> augmentation -> generation"
+      - "Conhecer as principais ferramentas (LangChain, LlamaIndex)"
+      - "Documentar arquitetura básica de um sistema RAG"
+    successCriteria:
+      - "Conceitos fundamentais documentados"
+      - "Arquitetura RAG entendida"
+      - "Ferramentas mapeadas"
+
+  - id: 2
+    title: "Processando documentos"
+    description: "O Rafael passou os docs da TechCorp: 'Temos PDFs, markdowns, e HTMLs. Primeiro passo é processar esses documentos: extrair texto, quebrar em chunks, limpar. Garbage in, garbage out.' Dados em data/techcorp_docs/."
+    context: "Data ingestion. Rafael: 'Chunking é crítico. Muito grande perde relevância, muito pequeno perde contexto.'"
+    steps:
+      - "Configurar ambiente com LangChain"
+      - "Implementar loaders pra diferentes formatos (PDF, MD, HTML)"
+      - "Implementar text splitter com overlap"
+      - "Experimentar diferentes tamanhos de chunk (500, 1000, 1500 tokens)"
+      - "Adicionar metadata aos chunks (fonte, página, data)"
+      - "Criar pipeline de processamento"
+    successCriteria:
+      - "Loaders funcionando pra todos os formatos"
+      - "Chunking implementado com overlap"
+      - "Metadata preservada"
+
+  - id: 3
+    title: "Criando embeddings e vector store"
+    description: "O Rafael quer persistência: 'Agora precisa transformar os chunks em embeddings e guardar num vector store. Vamos usar ChromaDB que é simples e local. Depois dá pra migrar pra Pinecone se precisar escalar.'"
+    context: "Vector store. Rafael: 'Embedding é o coração do RAG. A qualidade da busca depende dele.'"
+    steps:
+      - "Configurar modelo de embeddings (OpenAI ou open source)"
+      - "Criar embeddings pros chunks processados"
+      - "Configurar ChromaDB como vector store"
+      - "Implementar indexação dos chunks"
+      - "Testar busca por similaridade com queries exemplo"
+      - "Avaliar qualidade dos resultados"
+    successCriteria:
+      - "Embeddings criados"
+      - "ChromaDB configurado e populado"
+      - "Busca por similaridade funcionando"
+
+  - id: 4
+    title: "Implementando o retrieval"
+    description: "A Carla quer ver funcionando: 'Quero fazer uma pergunta e ver os documentos relevantes. Tipo: onde tá a política de férias? E o sistema trazer os chunks certos.' Hora de implementar o retrieval."
+    context: "Retrieval. Rafael: 'Retrieval é onde a maioria dos sistemas RAG falha. Vamos iterar bastante aqui.'"
+    steps:
+      - "Implementar retriever básico (top-k por similaridade)"
+      - "Testar com queries da Carla"
+      - "Implementar filtros por metadata (tipo de doc, data)"
+      - "Experimentar com reranking (cross-encoder)"
+      - "Implementar hybrid search (keyword + semantic)"
+      - "Avaliar recall e precision do retrieval"
+    successCriteria:
+      - "Retriever funcionando"
+      - "Filtros por metadata"
+      - "Métricas de qualidade avaliadas"
+
+  - id: 5
+    title: "Geração de respostas com contexto"
+    description: "O Rafael quer fechar o loop: 'Agora vem a mágica: pegar os chunks recuperados, montar um prompt com contexto, e pedir pro LLM gerar uma resposta. O prompt engineering aqui é crucial.'"
+    context: "Generation. Rafael: 'O prompt precisa instruir o modelo a responder SÓ com base no contexto. Senão ele alucina.'"
+    steps:
+      - "Configurar cliente OpenAI (ou modelo alternativo)"
+      - "Criar prompt template com instruções claras"
+      - "Implementar chain de RAG (retrieval + generation)"
+      - "Adicionar instrução pra citar fontes"
+      - "Implementar fallback quando não encontra informação"
+      - "Testar com diferentes tipos de pergunta"
+    successCriteria:
+      - "Chain RAG completa funcionando"
+      - "Respostas citam fontes"
+      - "Fallback implementado"
+
+  - id: 6
+    title: "Melhorando a qualidade"
+    description: "A Carla testou e achou problemas: 'Algumas respostas estão erradas ou incompletas. Às vezes ele responde coisas que não estão nos docs.' O Rafael sugeriu técnicas de melhoria."
+    context: "Quality. Rafael: 'RAG out of the box é 70% bom. Pra chegar em 90% precisa de vários tricks.'"
+    steps:
+      - "Implementar query expansion (reformular pergunta)"
+      - "Adicionar self-query (extrair filtros da pergunta)"
+      - "Implementar verificação de relevância dos chunks"
+      - "Adicionar chain of thought no prompt"
+      - "Implementar fallback pra perguntas fora do escopo"
+      - "Criar conjunto de testes pra avaliar qualidade"
+    successCriteria:
+      - "Técnicas de melhoria implementadas"
+      - "Suite de testes criada"
+      - "Qualidade mensurável"
+
+  - id: 7
+    title: "API e interface"
+    description: "A Carla quer demonstrar: 'Preciso de algo que eu possa mostrar pro cliente. Uma API simples e um chat básico. Não precisa ser bonito, precisa funcionar.' Hora de produtizar."
+    context: "MVP. Carla: 'Cliente quer ver funcionando, não quer ver Jupyter notebook.'"
+    steps:
+      - "Criar API com FastAPI"
+      - "Endpoint de chat (recebe pergunta, retorna resposta)"
+      - "Endpoint de feedback (usuário marca resposta boa/ruim)"
+      - "Criar interface simples com Streamlit ou Gradio"
+      - "Adicionar histórico de conversa"
+      - "Implementar streaming de resposta"
+    successCriteria:
+      - "API funcional"
+      - "Interface de chat"
+      - "Streaming funcionando"
+
+  - id: 8
+    title: "Demo pro cliente"
+    description: "A Carla marcou demo com a TechCorp: 'Temos 30 minutos. Mostra o problema, mostra a solução, deixa eles testarem. Se gostarem, fechamos contrato de piloto.' Hora de brilhar."
+    context: "Sales demo. Rafael: 'Demo técnica é diferente de demo de vendas. Foca no valor, não na tecnologia.'"
+    steps:
+      - "Preparar ambiente de demo estável"
+      - "Criar script de demonstração (3 casos de uso)"
+      - "Preparar perguntas que mostram o valor"
+      - "Ter fallback pra perguntas que podem falhar"
+      - "Documentar próximos passos e limitações"
+      - "Preparar proposta de piloto"
+    successCriteria:
+      - "Demo funcional e estável"
+      - "Script de apresentação"
+      - "Proposta de piloto pronta"

@@ -1,0 +1,157 @@
+id: multimodal-app
+title: "App Multimodal na VisionLab"
+description: "Você entrou como AI Engineer na VisionLab, uma startup que quer democratizar IA multimodal. O produto: uma plataforma onde usuários podem fazer upload de imagens, áudios e documentos, e a IA entende e responde sobre tudo. Sua missão: construir um sistema que processa texto, imagem e áudio de forma integrada, abrindo possibilidades que antes eram impossíveis."
+category: ai-engineer
+stack:
+  - Python
+  - OpenAI GPT-4V
+  - Whisper
+  - LangChain
+  - Streamlit
+difficulty: intermediate
+estimatedHours: 12
+totalTasks: 8
+
+context:
+  company: "VisionLab"
+  role: "AI Engineer"
+  team:
+    - name: "Priscila"
+      role: "CTO"
+      description: "Sua gestora. Especialista em computer vision. Empolgada com modelos multimodais."
+    - name: "Henrique"
+      role: "Product Manager"
+      description: "Define casos de uso. Focado em aplicações práticas que resolvem problemas reais."
+    - name: "Beta Users"
+      role: "Designers, marketeiros, educadores"
+      description: "Querem IA que entende imagens e áudio, não só texto."
+  situation: "O Henrique mapeou a dor: 'Designers querem feedback sobre layouts. Marketeiros querem analisar ads dos concorrentes. Educadores querem transcrever aulas e gerar resumos. Tudo isso exige entender mais que texto.' A Priscila: 'GPT-4V e Whisper mudaram o jogo. Agora dá pra construir isso.'"
+
+tasks:
+  - id: 1
+    title: "Fundamentos de IA multimodal"
+    description: "Primeiro dia! A Priscila marcou sessão: 'Multimodal é o futuro. Modelos que entendem texto, imagem, áudio, vídeo. Precisa entender como funciona: encoders, fusion, attention cross-modal.' Onboarding."
+    context: "Fundamentos. Priscila: 'Até pouco tempo, cada modalidade era um modelo separado. Agora tudo junto.'"
+    steps:
+      - "Entender o que é IA multimodal"
+      - "Estudar arquiteturas: CLIP, GPT-4V, Gemini"
+      - "Entender como modelos processam imagens (vision encoder)"
+      - "Entender como modelos processam áudio (Whisper)"
+      - "Estudar casos de uso multimodais"
+      - "Documentar capabilities e limitações"
+    successCriteria:
+      - "Conceitos multimodais documentados"
+      - "Modelos principais conhecidos"
+      - "Limitações entendidas"
+
+  - id: 2
+    title: "Vision: Entendendo imagens"
+    description: "A Priscila quer começar com imagem: 'Primeiro caso: usuário faz upload de imagem, faz pergunta sobre ela. Tipo: o que tem nessa imagem? Qual a cor predominante? Tem texto? O que diz?' Hora de implementar vision."
+    context: "Vision. Priscila: 'GPT-4V é impressionante. Descreve, analisa, lê texto em imagem.'"
+    steps:
+      - "Configurar API do GPT-4V (ou alternativa)"
+      - "Implementar upload e encoding de imagem"
+      - "Criar prompts pra diferentes tarefas (descrição, análise, OCR)"
+      - "Testar com diferentes tipos de imagem"
+      - "Implementar handling de imagens grandes"
+      - "Avaliar qualidade das respostas"
+    successCriteria:
+      - "Upload de imagem funcionando"
+      - "Análise de imagem funcional"
+      - "Diferentes tarefas testadas"
+
+  - id: 3
+    title: "Áudio: Transcrição e entendimento"
+    description: "O Henrique quer áudio: 'Educadores gravam aulas e querem transcrever. Mas não só transcrever - querem resumo, pontos principais, perguntas de revisão. Whisper + LLM.' Hora de integrar áudio."
+    context: "Áudio. Henrique: 'Whisper é o melhor transcriber. Depois passa pro LLM processar.'"
+    steps:
+      - "Configurar Whisper (API ou local)"
+      - "Implementar upload de áudio"
+      - "Implementar transcrição"
+      - "Processar transcrição com LLM (resumo, pontos chave)"
+      - "Testar com diferentes formatos e línguas"
+      - "Implementar handling de áudios longos (chunking)"
+    successCriteria:
+      - "Transcrição funcionando"
+      - "Processamento pós-transcrição"
+      - "Áudios longos handled"
+
+  - id: 4
+    title: "Combinando modalidades"
+    description: "A Priscila quer integrar: 'O poder de verdade é combinar. Tipo: usuário manda imagem de um gráfico + áudio explicando, e pede análise. Ou manda foto de documento + pergunta por voz.' Hora de combinar."
+    context: "Fusion. Priscila: 'Single modality qualquer um faz. Multi-modality é o diferencial.'"
+    steps:
+      - "Implementar input multi-modal (imagem + texto)"
+      - "Implementar input multi-modal (áudio + imagem)"
+      - "Criar prompt que combina contextos de diferentes modalidades"
+      - "Testar casos de uso combinados"
+      - "Implementar fallback quando uma modalidade falha"
+      - "Documentar combinações suportadas"
+    successCriteria:
+      - "Inputs multi-modais funcionando"
+      - "Contextos combinados corretamente"
+      - "Casos de uso testados"
+
+  - id: 5
+    title: "Casos de uso específicos"
+    description: "O Henrique priorizou 3 casos: 'Design feedback (analisa UI), Ad analysis (compara ads), Lecture summarizer (transcreve e resume aula). Cada um é um produto mini. Vamos implementar os 3.'"
+    context: "Product focus. Henrique: 'Feature genérica não vende. Caso de uso específico vende.'"
+    steps:
+      - "Implementar Design Feedback (upload de UI, recebe críticas)"
+      - "Implementar Ad Analyzer (upload de ad, análise de copy, visual, CTA)"
+      - "Implementar Lecture Summarizer (áudio -> transcrição -> resumo -> flashcards)"
+      - "Criar prompts especializados pra cada caso"
+      - "Testar com usuários beta"
+      - "Iterar baseado no feedback"
+    successCriteria:
+      - "3 casos de uso implementados"
+      - "Prompts otimizados"
+      - "Feedback dos usuários coletado"
+
+  - id: 6
+    title: "Interface de usuário"
+    description: "O Henrique quer testar: 'Preciso de uma interface onde beta users possam usar os 3 casos de uso. Upload fácil, resultado claro, histórico. Não precisa ser bonito, precisa ser funcional.'"
+    context: "MVP. Henrique: 'Usuários vão testar e dar feedback. Interface é a ponte.'"
+    steps:
+      - "Criar interface com Streamlit"
+      - "Implementar área de upload drag-and-drop"
+      - "Criar tabs pros 3 casos de uso"
+      - "Mostrar preview de imagens/áudios"
+      - "Implementar histórico de análises"
+      - "Adicionar loading states e feedback visual"
+    successCriteria:
+      - "Interface funcional"
+      - "3 casos de uso acessíveis"
+      - "UX minimamente boa"
+
+  - id: 7
+    title: "Otimização e custos"
+    description: "A Priscila tá preocupada: 'GPT-4V é caro. Whisper API também. Se escalar, a conta explode. Precisa otimizar: cache, modelos menores pra tarefas simples, rate limiting.' Hora de pensar em custos."
+    context: "Cost optimization. Priscila: 'IA generativa é cara. Precisa ser esperto no uso.'"
+    steps:
+      - "Implementar cache de resultados (mesma imagem = mesmo resultado)"
+      - "Usar modelo menor pra tarefas simples (classificação)"
+      - "Implementar rate limiting por usuário"
+      - "Comprimir imagens antes de enviar"
+      - "Usar Whisper local pra áudios curtos"
+      - "Criar dashboard de custos"
+    successCriteria:
+      - "Cache implementado"
+      - "Custos otimizados"
+      - "Dashboard de custos"
+
+  - id: 8
+    title: "API e documentação"
+    description: "A Priscila quer abrir: 'Alguns usuários querem integrar nos sistemas deles, não usar nossa UI. Vamos expor uma API. Documentada, com exemplos, rate limited.' Produtização final."
+    context: "API. Priscila: 'API expande o mercado. Desenvolvedores podem construir em cima.'"
+    steps:
+      - "Criar API com FastAPI"
+      - "Endpoints pra cada modalidade e caso de uso"
+      - "Implementar autenticação com API keys"
+      - "Criar documentação interativa (Swagger)"
+      - "Escrever exemplos de integração"
+      - "Criar tier de pricing (free, pro)"
+    successCriteria:
+      - "API funcional"
+      - "Documentação completa"
+      - "Exemplos de integração"

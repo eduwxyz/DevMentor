@@ -1,0 +1,157 @@
+id: ai-agent
+title: "AI Agent na TaskFlow"
+description: "Você entrou como AI Engineer na TaskFlow, uma startup que quer criar o assistente de produtividade definitivo. O diferencial: não é só um chatbot, é um agente que EXECUTA tarefas. Marca reuniões, envia emails, busca informações, cria documentos. Sua missão: construir um AI Agent com function calling que realmente faz coisas, não só conversa."
+category: ai-engineer
+stack:
+  - Python
+  - OpenAI API
+  - LangChain
+  - FastAPI
+  - SQLite
+difficulty: intermediate
+estimatedHours: 12
+totalTasks: 8
+
+context:
+  company: "TaskFlow"
+  role: "AI Engineer"
+  team:
+    - name: "Diego"
+      role: "CTO"
+      description: "Seu gestor. Obcecado por agentes autônomos. Quer construir o Jarvis do mundo real."
+    - name: "Amanda"
+      role: "Head of Product"
+      description: "Define o que o agente deve fazer. Foco em casos de uso de alta frequência."
+    - name: "Beta Users"
+      role: "50 early adopters"
+      description: "Founders e executivos que querem automatizar tarefas repetitivas."
+  situation: "Os beta users estão frustrados com assistentes que só respondem perguntas. 'Quero que ele FAÇA, não que me diga como fazer.' O Diego acredita que agentes com function calling são o futuro. A Amanda mapeou os 10 casos de uso mais pedidos. Você vai construir o agente que executa pelo menos 5 deles."
+
+tasks:
+  - id: 1
+    title: "Fundamentos de AI Agents"
+    description: "Primeiro dia! O Diego marcou sessão: 'Agente é diferente de chatbot. Chatbot responde, agente age. Precisa entender: function calling, tool use, planejamento, memória. Isso muda tudo.' Onboarding intensivo."
+    context: "Fundamentos. Diego: 'Agentes são a próxima onda de IA. Quem dominar isso vai dominar o mercado.'"
+    steps:
+      - "Entender diferença entre chatbot e agent"
+      - "Estudar function calling / tool use da OpenAI"
+      - "Entender o loop: observe -> think -> act"
+      - "Estudar ReAct pattern (Reasoning + Acting)"
+      - "Conhecer frameworks: LangChain Agents, AutoGPT, CrewAI"
+      - "Documentar arquitetura de um agente"
+    successCriteria:
+      - "Conceitos de agentes documentados"
+      - "Function calling entendido"
+      - "Arquitetura mapeada"
+
+  - id: 2
+    title: "Primeira tool: Busca na web"
+    description: "O Diego quer começar simples: 'Primeira tool: busca na web. Usuário pergunta algo atual, agente busca e responde. Parece básico mas já é mais que um ChatGPT vanilla.' Hora de implementar."
+    context: "First tool. Diego: 'Cada tool é uma capacidade nova. Começa com uma, depois escala.'"
+    steps:
+      - "Configurar OpenAI client com function calling"
+      - "Implementar tool de web search (usando API de busca)"
+      - "Definir schema da tool (parâmetros, descrição)"
+      - "Implementar lógica de execução da tool"
+      - "Criar loop de agente: recebe query -> decide se usa tool -> executa -> responde"
+      - "Testar com perguntas que precisam de info atual"
+    successCriteria:
+      - "Tool de busca funcionando"
+      - "Agente decide quando usar"
+      - "Respostas com info atualizada"
+
+  - id: 3
+    title: "Tools de produtividade"
+    description: "A Amanda priorizou: 'Os users querem: criar eventos no calendário, enviar emails, criar lembretes. Essas 3 tools já resolvem 50% dos pedidos.' Hora de expandir o toolkit."
+    context: "Core tools. Amanda: 'Não precisa integrar de verdade ainda. Simula as ações e loga. O importante é o agente saber usar.'"
+    steps:
+      - "Implementar tool: create_calendar_event"
+      - "Implementar tool: send_email"
+      - "Implementar tool: create_reminder"
+      - "Definir schemas claros pra cada tool"
+      - "Implementar mock de execução (loga a ação)"
+      - "Testar agente com requests complexos (ex: 'marca reunião com joão amanhã 3pm')"
+    successCriteria:
+      - "3 tools implementadas"
+      - "Agente extrai parâmetros corretamente"
+      - "Ações logadas corretamente"
+
+  - id: 4
+    title: "Planejamento multi-step"
+    description: "O Diego quer mais: 'Agente precisa fazer tarefas complexas. Tipo: pesquisa sobre X, cria um resumo, e envia por email pro Y. Isso exige planejamento - quebrar em steps e executar em sequência.'"
+    context: "Planning. Diego: 'Agente single-step é limitado. Multi-step é onde a mágica acontece.'"
+    steps:
+      - "Implementar planning prompt (quebrar tarefa em steps)"
+      - "Criar executor que roda steps em sequência"
+      - "Implementar passagem de contexto entre steps"
+      - "Adicionar tool: create_document (pra criar resumos)"
+      - "Testar com tarefas multi-step"
+      - "Implementar retry e error handling"
+    successCriteria:
+      - "Planejamento multi-step funcionando"
+      - "Contexto passado entre steps"
+      - "Error handling implementado"
+
+  - id: 5
+    title: "Memória e contexto"
+    description: "A Amanda reportou feedback: 'Users reclamam que o agente esquece tudo. Se eu disse que meu chefe é o João, ele deveria lembrar.' O Diego: 'Precisamos de memória - short term e long term.'"
+    context: "Memory. Diego: 'Sem memória, agente é stateless. Com memória, vira um assistente pessoal de verdade.'"
+    steps:
+      - "Implementar memória de curto prazo (histórico de conversa)"
+      - "Implementar memória de longo prazo (SQLite com facts sobre usuário)"
+      - "Criar tool: remember_fact (salva info sobre usuário)"
+      - "Criar tool: recall_facts (busca info salva)"
+      - "Injetar contexto relevante no prompt do agente"
+      - "Testar persistência de informações entre sessões"
+    successCriteria:
+      - "Memória curto prazo funcionando"
+      - "Memória longo prazo persistente"
+      - "Agente usa contexto salvo"
+
+  - id: 6
+    title: "Confirmação e segurança"
+    description: "A Amanda tá preocupada: 'E se o agente enviar email errado? Ou marcar reunião no horário errado? Precisa de confirmação antes de executar.' O Diego concorda: 'Human in the loop pra ações críticas.'"
+    context: "Safety. Amanda: 'Agente autônomo demais é perigoso. Precisa de guardrails.'"
+    steps:
+      - "Classificar tools por risco (read vs write)"
+      - "Implementar confirmação pra tools de alto risco"
+      - "Criar preview da ação antes de executar"
+      - "Implementar rollback quando possível"
+      - "Adicionar rate limiting (max ações por minuto)"
+      - "Criar audit log de todas as ações"
+    successCriteria:
+      - "Confirmação implementada"
+      - "Preview de ações"
+      - "Audit log funcionando"
+
+  - id: 7
+    title: "API e interface de chat"
+    description: "A Amanda quer testar com users: 'Preciso de uma interface de chat onde os beta users possam interagir com o agente. Histórico, status de execução, confirmações.' Hora de produtizar."
+    context: "MVP. Amanda: 'Users precisam confiar no agente. Interface clara ajuda.'"
+    steps:
+      - "Criar API com FastAPI"
+      - "Endpoint de chat com streaming"
+      - "Endpoint de confirmação de ação"
+      - "Endpoint de histórico"
+      - "Criar interface com Streamlit"
+      - "Mostrar status de execução (thinking, executing, waiting confirmation)"
+    successCriteria:
+      - "API funcional"
+      - "Interface de chat"
+      - "Status de execução visível"
+
+  - id: 8
+    title: "Avaliação e iteração"
+    description: "O Diego quer medir: 'Como saber se o agente tá bom? Precisa de métricas: taxa de sucesso, steps até completar, satisfação do usuário. E criar um eval set pra testar regressões.'"
+    context: "Evaluation. Diego: 'Agente sem eval é caixa preta. Precisa medir pra melhorar.'"
+    steps:
+      - "Definir métricas de sucesso (task completion rate)"
+      - "Criar dataset de avaliação (50 tarefas com resultado esperado)"
+      - "Implementar avaliador automático"
+      - "Rodar eval e documentar baseline"
+      - "Identificar casos de falha"
+      - "Iterar no prompt e tools pra melhorar métricas"
+    successCriteria:
+      - "Métricas definidas"
+      - "Eval set criado"
+      - "Baseline documentado"

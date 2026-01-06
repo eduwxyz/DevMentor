@@ -1,0 +1,157 @@
+id: llm-finetuning
+title: "Fine-tuning LLM na ContentAI"
+description: "Você entrou como AI Engineer na ContentAI, uma startup que ajuda empresas a criar conteúdo de marketing. O problema: GPT genérico escreve bem, mas não no tom da marca. Cada cliente tem voz própria. Sua missão: criar um pipeline de fine-tuning que adapta LLMs pro estilo de cada cliente, gerando conteúdo que parece escrito pelo time interno."
+category: ai-engineer
+stack:
+  - Python
+  - OpenAI API
+  - Hugging Face
+  - Weights & Biases
+  - PyTorch
+difficulty: advanced
+estimatedHours: 14
+totalTasks: 8
+
+context:
+  company: "ContentAI"
+  role: "AI Engineer"
+  team:
+    - name: "Lucas"
+      role: "CTO"
+      description: "Seu gestor. PhD em NLP, trabalhou na Hugging Face. Expert em fine-tuning."
+    - name: "Marina"
+      role: "Head of Customer Success"
+      description: "Interface com clientes. Sabe exatamente o que eles precisam e reclamam."
+    - name: "Cliente: NovaTech"
+      role: "Startup de fintech"
+      description: "Quer conteúdo pro blog e redes sociais. Tom: técnico mas acessível, jovem, sem corporatives."
+  situation: "A NovaTech testou GPT-4 direto e odiou: 'Parece robô corporativo. Nossa marca é descolada, fala gíria, usa emoji. Isso aqui tá muito formal.' A Marina prometeu que a ContentAI resolve. O Lucas disse: 'Fine-tuning é o caminho. Vamos ensinar o modelo a falar como a NovaTech.'"
+
+tasks:
+  - id: 1
+    title: "Fundamentos de fine-tuning"
+    description: "Primeiro dia! O Lucas marcou sessão: 'Fine-tuning é treinar um modelo pré-treinado em dados específicos. Mas tem vários tipos: full fine-tuning, LoRA, prompt tuning. Precisa entender os trade-offs.' Onboarding denso."
+    context: "Fundamentos. Lucas: 'Fine-tuning mal feito destrói o modelo. Bem feito, cria magia.'"
+    steps:
+      - "Entender o que é fine-tuning vs prompting vs RAG"
+      - "Estudar tipos: full fine-tuning, LoRA, QLoRA, prompt tuning"
+      - "Entender quando usar cada abordagem"
+      - "Estudar riscos: catastrophic forgetting, overfitting"
+      - "Conhecer ferramentas: OpenAI fine-tuning, HuggingFace, Axolotl"
+      - "Documentar decisões de arquitetura"
+    successCriteria:
+      - "Tipos de fine-tuning documentados"
+      - "Trade-offs entendidos"
+      - "Approach escolhido e justificado"
+
+  - id: 2
+    title: "Coletando e preparando dados"
+    description: "A Marina coletou conteúdos da NovaTech: 'Temos 200 posts de blog, 500 posts de LinkedIn, 1000 tweets. Isso é o estilo deles.' O Lucas alertou: 'Dados precisam de curadoria. Nem tudo é bom exemplo.'"
+    context: "Data preparation. Lucas: 'Qualidade dos dados > quantidade. 100 exemplos bons batem 1000 medíocres.'"
+    steps:
+      - "Coletar conteúdos existentes da NovaTech"
+      - "Classificar por qualidade (a Marina ajuda)"
+      - "Filtrar conteúdos que representam bem a marca"
+      - "Formatar dados pro formato de fine-tuning (instruction, input, output)"
+      - "Criar split treino/validação/teste"
+      - "Analisar distribuição e diversidade dos dados"
+    successCriteria:
+      - "Dataset coletado e filtrado"
+      - "Formato correto para fine-tuning"
+      - "Splits criados"
+
+  - id: 3
+    title: "Fine-tuning com OpenAI"
+    description: "O Lucas quer começar simples: 'OpenAI tem fine-tuning API. É mais fácil e rápido. Vamos usar como baseline. Se precisar de mais controle, partimos pra open source depois.'"
+    context: "OpenAI fine-tuning. Lucas: 'API da OpenAI abstrai muita complexidade. Bom pra MVP.'"
+    steps:
+      - "Preparar dados no formato JSONL da OpenAI"
+      - "Fazer upload do dataset"
+      - "Configurar job de fine-tuning"
+      - "Monitorar treinamento"
+      - "Testar modelo fine-tuned"
+      - "Comparar com modelo base (antes/depois)"
+    successCriteria:
+      - "Fine-tuning completado"
+      - "Modelo testado"
+      - "Comparativo documentado"
+
+  - id: 4
+    title: "Avaliação de qualidade"
+    description: "A Marina quer validar: 'Como saber se o modelo tá escrevendo como a NovaTech? Preciso de métricas, não só feeling.' O Lucas: 'Avaliação de LLM é difícil. Vamos combinar métricas automáticas e humanas.'"
+    context: "Evaluation. Lucas: 'LLM eval é arte e ciência. Nenhuma métrica é perfeita.'"
+    steps:
+      - "Criar test set com prompts representativos"
+      - "Implementar métricas automáticas (perplexity, BLEU/ROUGE)"
+      - "Criar rubrica de avaliação humana (tom, clareza, brand fit)"
+      - "Fazer blind test: modelo base vs fine-tuned"
+      - "Coletar feedback da Marina e cliente"
+      - "Documentar resultados quantitativos e qualitativos"
+    successCriteria:
+      - "Test set criado"
+      - "Métricas calculadas"
+      - "Avaliação humana realizada"
+
+  - id: 5
+    title: "Fine-tuning open source com LoRA"
+    description: "O Lucas quer alternativa: 'OpenAI é caro e você não controla o modelo. Vamos fazer fine-tuning de um LLaMA com LoRA. Mais barato, mais controle, roda local.' Hora de ir pro open source."
+    context: "Open source. Lucas: 'LoRA é revolucionário. Fine-tuning com 1% dos parâmetros.'"
+    steps:
+      - "Escolher modelo base (LLaMA, Mistral)"
+      - "Configurar ambiente com PEFT e bitsandbytes"
+      - "Preparar dados no formato do modelo"
+      - "Configurar LoRA (rank, alpha, target modules)"
+      - "Treinar com monitoramento (W&B)"
+      - "Comparar com fine-tuning OpenAI"
+    successCriteria:
+      - "LoRA fine-tuning completado"
+      - "Modelo treinado e salvo"
+      - "Comparativo com OpenAI"
+
+  - id: 6
+    title: "Otimização e iteração"
+    description: "A Marina testou e quer melhorias: 'Tá bom mas pode melhorar. Às vezes ainda parece genérico. E alguns outputs são muito longos.' O Lucas: 'Vamos iterar: mais dados, ajustar hiperparâmetros, refinar prompt.'"
+    context: "Iteration. Lucas: 'Fine-tuning é iterativo. Primeiro modelo nunca é o melhor.'"
+    steps:
+      - "Analisar casos de falha"
+      - "Coletar mais dados pra casos problemáticos"
+      - "Experimentar com hiperparâmetros (learning rate, epochs)"
+      - "Testar com diferentes prompts de sistema"
+      - "Implementar controle de tamanho de output"
+      - "Rodar nova avaliação"
+    successCriteria:
+      - "Melhorias identificadas e implementadas"
+      - "Métricas melhoraram"
+      - "Cliente aprovou"
+
+  - id: 7
+    title: "Pipeline de fine-tuning"
+    description: "O Lucas quer escalar: 'NovaTech é um cliente. Vamos ter 50. Não dá pra fazer manual. Precisa de um pipeline: recebe dados, treina, avalia, deploya. Automatizado.' Hora de produtizar."
+    context: "MLOps. Lucas: 'Pipeline reproduzível é a diferença entre POC e produto.'"
+    steps:
+      - "Criar script de preparação de dados"
+      - "Criar script de treinamento parametrizável"
+      - "Criar script de avaliação automática"
+      - "Implementar versionamento de modelos"
+      - "Criar config por cliente (hiperparâmetros, dados)"
+      - "Documentar pipeline end-to-end"
+    successCriteria:
+      - "Pipeline automatizado"
+      - "Versionamento funcionando"
+      - "Documentação completa"
+
+  - id: 8
+    title: "Deploy e serving"
+    description: "A Marina quer usar: 'O modelo tá pronto. Agora precisa servir. API que recebe prompt e retorna texto no estilo do cliente. Bônus se tiver playground pra testar.' Última milha."
+    context: "Deployment. Lucas: 'Modelo no notebook não gera valor. Modelo em produção gera.'"
+    steps:
+      - "Escolher estratégia de serving (API própria vs inference endpoint)"
+      - "Implementar API com FastAPI"
+      - "Adicionar autenticação por cliente"
+      - "Implementar rate limiting e logging"
+      - "Criar playground simples pra testar"
+      - "Monitorar latência e uso"
+    successCriteria:
+      - "API em produção"
+      - "Multi-tenant (vários clientes)"
+      - "Monitoramento funcionando"
