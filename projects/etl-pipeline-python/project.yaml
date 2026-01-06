@@ -1,0 +1,168 @@
+id: etl-pipeline-python
+title: "Pipeline ETL da StreamPulse"
+description: "Você entrou como Data Engineer Junior na StreamPulse, uma plataforma de streaming de música que está crescendo rápido. O problema: os dados estão em arquivos CSV jogados em pastas, ninguém sabe o que é confiável, e o time de analytics passa mais tempo limpando dados do que analisando. Sua missão: criar o primeiro pipeline ETL automatizado da empresa."
+category: data-engineering
+stack:
+  - Python
+  - Pandas
+  - PostgreSQL
+  - Airflow
+  - Docker
+difficulty: beginner
+estimatedHours: 10
+totalTasks: 8
+
+context:
+  company: "StreamPulse"
+  role: "Data Engineer Junior"
+  team:
+    - name: "Gustavo"
+      role: "Head of Data Engineering"
+      description: "Seu mentor. 10 anos de experiência em pipelines. Calmo, didático, e exigente com qualidade."
+    - name: "Larissa"
+      role: "Data Analyst"
+      description: "Sua principal stakeholder. Sofre todo dia com dados sujos e atrasados. Vai te dar feedback do que precisa."
+    - name: "Roberto"
+      role: "CTO"
+      description: "Quer dados confiáveis pra apresentar pros investidores. Cansou de números que não batem."
+  situation: "A StreamPulse tem 5 milhões de usuários e gera 50GB de logs por dia. Mas esses dados estão em CSVs espalhados, com formatos inconsistentes, e a Larissa passa 2 horas por dia só limpando planilhas. O Gustavo foi contratado pra montar a área de Data Engineering, e você é a primeira contratação. Começa pelo básico: um pipeline ETL de verdade."
+
+tasks:
+  - id: 1
+    title: "Entendendo os dados: Exploração inicial"
+    description: "Primeiro dia. O Gustavo te passou acesso aos CSVs brutos: 'Antes de construir qualquer coisa, preciso que você explore esses dados. Entenda o que tem, a qualidade, os problemas. Me traz um relatório.' Os arquivos estão em data/raw/."
+    context: "Onboarding com Gustavo. Ele explicou que os dados vêm de 3 fontes: app mobile (eventos de usuário), sistema de pagamentos, e catálogo de músicas."
+    steps:
+      - "Configurar ambiente Python (venv, pandas, jupyter)"
+      - "Carregar os CSVs de data/raw/ com pandas"
+      - "Explorar cada dataset: shape, tipos, valores únicos, nulos"
+      - "Identificar problemas de qualidade (datas inválidas, duplicatas, etc)"
+      - "Documentar schema de cada tabela"
+      - "Criar relatório de exploração em markdown"
+    successCriteria:
+      - "Ambiente configurado"
+      - "Todos os CSVs explorados"
+      - "Problemas de qualidade identificados"
+      - "Relatório de exploração criado"
+
+  - id: 2
+    title: "Extração: Lendo dados de múltiplas fontes"
+    description: "O Gustavo aprovou seu relatório. 'Agora vamos começar o E de ETL - Extração. Cria funções que leem cada fonte de dados e retornam DataFrames padronizados. Pensa em reuso - essas funções vão rodar todo dia.'"
+    context: "Sessão de coding. Gustavo enfatizou: 'Função que extrai não transforma. Só lê e retorna. Separação de responsabilidades.'"
+    steps:
+      - "Criar módulo src/extractors/"
+      - "Criar função extract_user_events() que lê eventos do app"
+      - "Criar função extract_payments() que lê dados de pagamento"
+      - "Criar função extract_catalog() que lê catálogo de músicas"
+      - "Tratar encodings diferentes (UTF-8, Latin1)"
+      - "Adicionar logging pra cada extração"
+    successCriteria:
+      - "3 funções de extração criadas"
+      - "Tratamento de encoding funcionando"
+      - "Logs sendo gerados"
+      - "Funções retornando DataFrames"
+
+  - id: 3
+    title: "Transformação: Limpeza e padronização"
+    description: "A Larissa mandou uma lista de problemas que ela encontra todo dia: 'Datas em formatos diferentes, nomes de colunas em inglês e português misturados, valores nulos onde não deveria, duplicatas... e por aí vai.' Hora do T de ETL."
+    context: "Reunião com Larissa. Ela mostrou as planilhas que faz manualmente todo dia pra limpar os dados. 'Se você automatizar isso, vai mudar minha vida.'"
+    steps:
+      - "Criar módulo src/transformers/"
+      - "Padronizar nomes de colunas (snake_case, inglês)"
+      - "Converter datas pro formato ISO (YYYY-MM-DD)"
+      - "Tratar valores nulos (estratégia por coluna)"
+      - "Remover duplicatas"
+      - "Validar tipos de dados"
+      - "Adicionar colunas de metadados (processed_at, source)"
+    successCriteria:
+      - "Transformações implementadas"
+      - "Dados padronizados"
+      - "Nulos tratados"
+      - "Duplicatas removidas"
+
+  - id: 4
+    title: "Carga: Enviando pro Data Warehouse"
+    description: "O Gustavo configurou um PostgreSQL: 'Esse é nosso Data Warehouse. Os dados limpos vão pra cá. O time de analytics vai consumir daqui, não mais dos CSVs.' Hora do L de ETL - Load."
+    context: "Arquitetura definida: CSVs (raw) -> Python (ETL) -> PostgreSQL (DW). Larissa vai apontar suas queries pro novo banco."
+    steps:
+      - "Criar módulo src/loaders/"
+      - "Configurar conexão com PostgreSQL (sqlalchemy)"
+      - "Usar variáveis de ambiente pra credenciais"
+      - "Criar tabelas no schema 'staging'"
+      - "Implementar load com pandas.to_sql()"
+      - "Usar estratégia 'replace' ou 'append' conforme tabela"
+      - "Adicionar verificação pós-load (row count)"
+    successCriteria:
+      - "Conexão com Postgres funcionando"
+      - "Dados sendo carregados"
+      - "Verificação de row count"
+      - "Credenciais em variáveis de ambiente"
+
+  - id: 5
+    title: "Pipeline orquestrado: Juntando tudo"
+    description: "O Gustavo quer ver o pipeline funcionando end-to-end: 'Cria um script main.py que roda todo o pipeline: extrai, transforma, carrega. Quero rodar um comando e os dados irem do CSV pro banco, limpos e prontos.'"
+    context: "Integração. Gustavo explicou: 'Pipeline precisa ser idempotente - posso rodar 10 vezes e o resultado é o mesmo. E precisa ter tratamento de erro robusto.'"
+    steps:
+      - "Criar src/main.py que orquestra o pipeline"
+      - "Definir ordem de execução (dependências entre tabelas)"
+      - "Adicionar try/except com logging de erros"
+      - "Implementar modo 'dry-run' (roda sem salvar)"
+      - "Adicionar métricas (linhas processadas, tempo de execução)"
+      - "Testar pipeline completo"
+    successCriteria:
+      - "Pipeline rodando end-to-end"
+      - "Tratamento de erros funcionando"
+      - "Métricas sendo logadas"
+      - "Dados no DW corretos"
+
+  - id: 6
+    title: "Qualidade de dados: Validações automáticas"
+    description: "O Roberto apareceu na daily: 'Como eu sei que os dados estão certos? Na última apresentação, os números do relatório não batiam com o app. Preciso de garantias.' Gustavo sugeriu implementar data quality checks."
+    context: "Data Quality é prioridade. Gustavo: 'Pipeline sem validação é bomba relógio. Vamos implementar checks que rodam após cada carga.'"
+    steps:
+      - "Criar módulo src/validators/"
+      - "Implementar checks de completude (% de nulos por coluna)"
+      - "Implementar checks de unicidade (PKs duplicadas)"
+      - "Implementar checks de referential integrity (FKs válidas)"
+      - "Implementar checks de freshness (dados recentes)"
+      - "Criar relatório de qualidade em cada execução"
+      - "Falhar pipeline se checks críticos não passarem"
+    successCriteria:
+      - "Validações implementadas"
+      - "Relatório de qualidade gerado"
+      - "Pipeline falha em erros críticos"
+      - "Checks documentados"
+
+  - id: 7
+    title: "Agendamento com Airflow"
+    description: "O Gustavo trouxe a próxima evolução: 'Não dá pra rodar manualmente todo dia. Vamos agendar com Airflow. Cria uma DAG que roda o pipeline toda madrugada, e me avisa se der erro.'"
+    context: "Automação. Gustavo explicou Airflow: DAGs, operators, schedules. 'Airflow é o padrão de mercado. Vale aprender bem.'"
+    steps:
+      - "Configurar Airflow local (docker-compose)"
+      - "Criar DAG 'streampulse_etl_daily'"
+      - "Definir tasks: extract -> transform -> load -> validate"
+      - "Configurar schedule: todo dia as 3h"
+      - "Adicionar alertas por email em caso de falha"
+      - "Testar DAG manualmente"
+    successCriteria:
+      - "Airflow rodando"
+      - "DAG criada e funcionando"
+      - "Schedule configurado"
+      - "Alertas funcionando"
+
+  - id: 8
+    title: "Documentação e entrega"
+    description: "Último dia do sprint! O Gustavo quer documentação completa: 'Outro engenheiro precisa conseguir entender e manter esse pipeline só lendo a doc. README, diagrama, dicionário de dados - tudo.' A Larissa quer saber como consumir os dados novos."
+    context: "Handoff. Gustavo vai revisar. Larissa quer começar a usar. Roberto quer apresentar pros investidores que agora tem 'infraestrutura de dados séria'."
+    steps:
+      - "Criar README com setup e como rodar"
+      - "Documentar arquitetura com diagrama"
+      - "Criar dicionário de dados (cada tabela e coluna)"
+      - "Documentar SLAs (quando dados ficam disponíveis)"
+      - "Criar runbook de troubleshooting"
+      - "Fazer sessão de handoff com a Larissa"
+    successCriteria:
+      - "README completo"
+      - "Diagrama de arquitetura"
+      - "Dicionário de dados"
+      - "Larissa consegue usar os novos dados"

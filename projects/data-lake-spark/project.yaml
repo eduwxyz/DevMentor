@@ -1,0 +1,197 @@
+id: data-lake-spark
+title: "Data Lake da LogiFlow"
+description: "Você foi contratado como Data Engineer na LogiFlow, uma empresa de logística que gerencia frotas de caminhões em todo o Brasil. São 10 mil veículos gerando dados de GPS, telemetria e entregas - 500GB por dia. O desafio: construir um Data Lake capaz de processar esse volume usando Spark, particionamento inteligente e formatos otimizados."
+category: data-engineering
+stack:
+  - Python
+  - PySpark
+  - Delta Lake
+  - AWS S3
+  - Airflow
+difficulty: intermediate
+estimatedHours: 14
+totalTasks: 10
+
+context:
+  company: "LogiFlow"
+  role: "Data Engineer"
+  team:
+    - name: "Renata"
+      role: "Head of Data Platform"
+      description: "Sua gestora. Arquiteta de Data Lakes, trabalhou na Uber e iFood. Expert em Spark e sistemas distribuídos."
+    - name: "Felipe"
+      role: "Data Scientist"
+      description: "Precisa de dados pra treinar modelos de otimização de rotas. Seu principal stakeholder técnico."
+    - name: "Sergio"
+      role: "COO"
+      description: "Quer dashboards em tempo real de toda a operação. Decisions based on data."
+  situation: "A LogiFlow cresceu 10x em 2 anos. O banco de dados relacional não aguenta mais. Queries de analytics travam, o time de BI sofre, e o Felipe não consegue treinar modelos porque demora horas pra extrair dados. A Renata foi contratada pra criar uma plataforma de dados moderna, e você é a peça chave do time."
+
+tasks:
+  - id: 1
+    title: "Entendendo o volume: Anatomia dos dados"
+    description: "Primeiro dia. A Renata te passou acesso aos dados brutos: 'Antes de arquitetar qualquer coisa, preciso que você entenda o volume, a velocidade e a variedade dos dados. Me traz números concretos.' Os dados de exemplo estão em data/sample/."
+    context: "Onboarding. Renata explicou as 3 fontes: GPS (posição a cada 30s), telemetria (sensores do caminhão), eventos de entrega. 'São 500GB/dia. Pensa nisso quando for arquitetar.'"
+    steps:
+      - "Analisar samples de cada fonte de dados"
+      - "Calcular volume por fonte (registros/dia, GB/dia)"
+      - "Identificar schema de cada dataset"
+      - "Analisar distribuição temporal (picos, vales)"
+      - "Identificar chaves naturais e cardinalidade"
+      - "Documentar findings em um report"
+    successCriteria:
+      - "Volume por fonte documentado"
+      - "Schemas identificados"
+      - "Distribuição temporal analisada"
+      - "Report de findings criado"
+
+  - id: 2
+    title: "Setup do ambiente Spark"
+    description: "A Renata definiu a stack: 'Vamos usar PySpark. Local primeiro, depois AWS EMR. Configura o ambiente e me mostra lendo um dos datasets grandes.' Hora de botar a mão na massa."
+    context: "A Renata explicou: 'Spark é sobre paralelismo. Pensa sempre em partições, shuffles, e como minimizar movimentação de dados.'"
+    steps:
+      - "Instalar PySpark e configurar SparkSession"
+      - "Configurar memória e cores adequados"
+      - "Ler um dataset grande com Spark"
+      - "Explorar API de DataFrame: select, filter, groupBy"
+      - "Comparar tempo de leitura: Pandas vs Spark"
+      - "Entender conceito de lazy evaluation"
+    successCriteria:
+      - "PySpark configurado e rodando"
+      - "Dataset grande sendo lido"
+      - "Operações básicas funcionando"
+      - "Lazy evaluation compreendido"
+
+  - id: 3
+    title: "Arquitetura Medallion: Bronze Layer"
+    description: "A Renata apresentou a arquitetura: 'Vamos usar Medallion - Bronze, Silver, Gold. Bronze é raw, exatamente como veio. Silver é limpo e padronizado. Gold é agregado pra consumo.' Começa pela Bronze."
+    context: "Workshop de arquitetura. Renata desenhou o fluxo: fontes -> Bronze (raw) -> Silver (clean) -> Gold (aggregated). 'Bronze é imutável. Se der merda, sempre podemos reprocessar.'"
+    steps:
+      - "Criar estrutura de diretórios: bronze/, silver/, gold/"
+      - "Ingerir dados brutos na camada Bronze"
+      - "Particionar por data (yyyy/mm/dd)"
+      - "Usar formato Parquet pra armazenamento"
+      - "Adicionar metadados: ingestion_timestamp, source_file"
+      - "Implementar schema evolution básico"
+    successCriteria:
+      - "Bronze layer criada"
+      - "Dados particionados por data"
+      - "Formato Parquet"
+      - "Metadados de ingestão"
+
+  - id: 4
+    title: "Silver Layer: Limpeza e padronização"
+    description: "A Renata quer qualidade: 'Silver é onde a mágica acontece. Limpa, padroniza, deduplica. O Felipe precisa de dados confiáveis pra treinar os modelos. Garbage in, garbage out.'"
+    context: "Sessão com Felipe. Ele mostrou problemas que enfrenta: 'Coordenadas GPS inválidas, timestamps fora de ordem, eventos duplicados. Me dá dor de cabeça.'"
+    steps:
+      - "Ler dados da Bronze layer"
+      - "Padronizar schemas (tipos, nomes de colunas)"
+      - "Tratar coordenadas inválidas (fora do Brasil)"
+      - "Ordenar por timestamp e deduplicar"
+      - "Adicionar colunas derivadas úteis (hora, dia_semana)"
+      - "Salvar na Silver layer com particionamento otimizado"
+    successCriteria:
+      - "Dados limpos na Silver"
+      - "Coordenadas validadas"
+      - "Duplicatas removidas"
+      - "Colunas derivadas adicionadas"
+
+  - id: 5
+    title: "Otimização: Particionamento e compactação"
+    description: "A Renata revisou sua Silver: 'Tá funcionando, mas tá lento. Vamos otimizar. Particionamento inteligente, compactação de small files, e predicate pushdown. Isso vai fazer diferença enorme em produção.'"
+    context: "Performance tuning. Renata mostrou o problema: milhares de arquivos pequenos = leitura lenta. 'Small files problem é clássico em Data Lakes.'"
+    steps:
+      - "Analisar distribuição de arquivos (tamanho, quantidade)"
+      - "Implementar compactação de small files"
+      - "Otimizar particionamento (por região? por cliente?)"
+      - "Adicionar Z-ordering em colunas frequentes"
+      - "Implementar vacuuming pra limpar arquivos antigos"
+      - "Medir melhoria de performance"
+    successCriteria:
+      - "Arquivos compactados (target: 128MB-1GB)"
+      - "Particionamento otimizado"
+      - "Queries mais rápidas (medir antes/depois)"
+
+  - id: 6
+    title: "Gold Layer: Agregações pra consumo"
+    description: "O Sergio quer dashboards: 'Preciso ver km rodados por frota, entregas por região, consumo de combustível - tudo atualizado diariamente.' A Renata disse: 'Isso é Gold layer - agregações prontas pra consumo.'"
+    context: "Reunião com Sergio. Ele mostrou os KPIs que acompanha: custo por km, taxa de entrega no prazo, utilização da frota. 'Hoje calculo no Excel. Quero automático.'"
+    steps:
+      - "Definir métricas de negócio com Sergio"
+      - "Criar tabela gold: métricas_diárias_frota"
+      - "Agregar: km_total, entregas, tempo_médio, combustível"
+      - "Particionar por data"
+      - "Criar tabela: métricas_por_região"
+      - "Otimizar pra queries de dashboard (pre-agregado)"
+    successCriteria:
+      - "Gold layer com métricas de negócio"
+      - "Agregações calculadas corretamente"
+      - "Performance otimizada pra dashboards"
+
+  - id: 7
+    title: "Delta Lake: ACID e time travel"
+    description: "A Renata quer evoluir: 'Parquet é bom, mas Delta Lake é melhor. ACID transactions, time travel, schema enforcement. Vamos migrar.' Delta Lake é a evolução natural do Data Lake."
+    context: "Upgrade de arquitetura. Renata explicou: 'Delta Lake resolve problemas clássicos: updates, deletes, concurrent writes. É retrocompatível com Parquet.'"
+    steps:
+      - "Instalar e configurar Delta Lake"
+      - "Converter tabelas de Parquet pra Delta"
+      - "Implementar MERGE (upsert) pra updates incrementais"
+      - "Testar time travel (versões anteriores)"
+      - "Configurar retention e vacuum"
+      - "Implementar schema enforcement"
+    successCriteria:
+      - "Tabelas em formato Delta"
+      - "MERGE funcionando"
+      - "Time travel disponível"
+      - "Schema enforcement ativo"
+
+  - id: 8
+    title: "Processamento incremental"
+    description: "A Renata trouxe o desafio: 'Reprocessar 500GB todo dia é desperdício. Vamos fazer incremental - só processa o que é novo. Isso vai reduzir custo em 90%.' Hora de otimizar o pipeline."
+    context: "Custo e tempo. Renata mostrou: full load = 4h e $50/dia. Incremental = 20min e $5/dia. 'A diferença paga seu salário.'"
+    steps:
+      - "Implementar watermark tracking (última data processada)"
+      - "Modificar ingestão pra ler só arquivos novos"
+      - "Usar MERGE ao invés de overwrite na Silver/Gold"
+      - "Tratar late arriving data (dados atrasados)"
+      - "Implementar idempotência (re-run seguro)"
+      - "Medir redução de tempo e custo"
+    successCriteria:
+      - "Pipeline incremental funcionando"
+      - "Watermark sendo rastreado"
+      - "Late data tratado"
+      - "Redução mensurável de tempo"
+
+  - id: 9
+    title: "Orquestração e monitoramento"
+    description: "A Renata quer produção: 'Pipeline rodando manualmente não é pipeline. Vamos orquestrar com Airflow e monitorar tudo. Quero saber se falhou antes do Sergio reclamar.'"
+    context: "Produção. Renata: 'SLA é 7h da manhã. Se os dados não estiverem prontos, Sergio não tem dashboard pra reunião das 8h.'"
+    steps:
+      - "Criar DAG Airflow pra pipeline completo"
+      - "Definir dependências: Bronze -> Silver -> Gold"
+      - "Adicionar sensors pra detectar novos arquivos"
+      - "Implementar retries com backoff exponencial"
+      - "Criar alertas pra falhas e atrasos"
+      - "Implementar métricas: linhas processadas, duração, erros"
+    successCriteria:
+      - "Pipeline orquestrado no Airflow"
+      - "Alertas funcionando"
+      - "Métricas de observabilidade"
+      - "SLA das 7h sendo cumprido"
+
+  - id: 10
+    title: "Documentação e handoff"
+    description: "Sprint final! A Renata quer entregar: 'Felipe precisa acessar os dados, Sergio precisa dos dashboards, e eu preciso de documentação pra onboardar o próximo DE. Vamos fechar com chave de ouro.'"
+    context: "Entrega oficial. Felipe quer notebook de exemplo. Sergio quer conexão com BI tool. Renata quer arquitetura documentada."
+    steps:
+      - "Criar README com arquitetura e setup"
+      - "Documentar cada camada (Bronze, Silver, Gold)"
+      - "Criar notebook de exemplo pra Data Science"
+      - "Configurar conexão com ferramenta de BI"
+      - "Documentar SLAs e responsáveis"
+      - "Fazer sessão de handoff com stakeholders"
+    successCriteria:
+      - "Documentação completa"
+      - "Felipe acessando dados via notebook"
+      - "Sergio com dashboard funcionando"
+      - "Arquitetura documentada com diagramas"

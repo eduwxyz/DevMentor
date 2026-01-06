@@ -1,0 +1,198 @@
+id: streaming-kafka
+title: "Streaming da SensorTech"
+description: "Você foi contratado como Data Engineer na SensorTech, uma empresa de IoT que monitora equipamentos industriais em fábricas. São 50 mil sensores enviando dados a cada segundo - temperatura, vibração, pressão. O desafio: processar em tempo real pra detectar anomalias antes que máquinas quebrem. Bem-vindo ao mundo do streaming com Kafka e Flink."
+category: data-engineering
+stack:
+  - Apache Kafka
+  - Apache Flink
+  - Python
+  - PostgreSQL
+  - Docker
+difficulty: advanced
+estimatedHours: 16
+totalTasks: 10
+
+context:
+  company: "SensorTech"
+  role: "Data Engineer"
+  team:
+    - name: "Marcelo"
+      role: "Principal Engineer"
+      description: "Arquiteto de sistemas real-time. 15 anos de experiência, trabalhou no Spotify e Uber. Seu mentor."
+    - name: "Juliana"
+      role: "ML Engineer"
+      description: "Desenvolve modelos de detecção de anomalias. Precisa de features em tempo real."
+    - name: "Andre"
+      role: "VP of Engineering"
+      description: "Quer reduzir downtime dos clientes em 50%. Streaming é a aposta estratégica da empresa."
+  situation: "A SensorTech processa dados em batch diário. Problema: quando detectam uma anomalia, a máquina já quebrou ontem. O Andre prometeu pros clientes detecção em tempo real - 'vamos saber que vai quebrar antes de quebrar'. Você foi contratado pra fazer isso acontecer. O prazo é apertado e as expectativas são altas."
+
+tasks:
+  - id: 1
+    title: "Streaming 101: Batch vs Real-time"
+    description: "Primeiro dia. O Marcelo te passou material de estudo: 'Antes de colocar a mão no Kafka, preciso que você entenda a diferença fundamental entre batch e streaming. São paradigmas diferentes.' Ele agendou uma sessão de discussão pra amanhã."
+    context: "Onboarding intensivo. Marcelo: 'Streaming não é batch mais rápido. É outra forma de pensar. Event time vs processing time, exactly-once vs at-least-once, windowing... precisa dominar os conceitos.'"
+    steps:
+      - "Estudar diferenças entre batch e streaming processing"
+      - "Entender conceitos: event time, processing time, watermarks"
+      - "Estudar garantias de entrega: at-most-once, at-least-once, exactly-once"
+      - "Pesquisar sobre windowing: tumbling, sliding, session"
+      - "Documentar entendimento em suas palavras"
+      - "Preparar perguntas pro Marcelo"
+    successCriteria:
+      - "Conceitos fundamentais documentados"
+      - "Diferenças batch vs streaming claras"
+      - "Perguntas inteligentes preparadas"
+
+  - id: 2
+    title: "Setup Kafka: Cluster local"
+    description: "O Marcelo aprovou sua preparação. 'Agora vamos pro Kafka. É o coração do nosso sistema de streaming. Configura um cluster local e me mostra produzindo e consumindo mensagens.' Docker vai facilitar."
+    context: "Hands-on. Marcelo: 'Kafka é publish-subscribe distribuído. Topics, partitions, consumer groups. Entende esses conceitos na prática.'"
+    steps:
+      - "Configurar Kafka com Docker Compose (Zookeeper + Broker)"
+      - "Criar topic 'sensor-readings' com 3 partições"
+      - "Produzir mensagens de teste com kafka-console-producer"
+      - "Consumir mensagens com kafka-console-consumer"
+      - "Entender consumer groups na prática"
+      - "Explorar Kafka UI pra visualizar topics"
+    successCriteria:
+      - "Kafka rodando em Docker"
+      - "Topic criado com partições"
+      - "Produção e consumo funcionando"
+      - "Consumer groups entendido"
+
+  - id: 3
+    title: "Produtor Python: Simulando sensores"
+    description: "O Marcelo quer dados realistas: 'Em produção, 50 mil sensores enviam dados. Pra desenvolvimento, cria um simulador que gera dados parecidos com os reais. Vai servir pra todos os testes.' Os schemas estão em docs/sensor-schema.json."
+    context: "Desenvolvimento. Marcelo passou exemplos de dados reais: temperatura (20-100C), vibração (0-500mm/s), pressão (1-10bar). 'Simula padrões normais e anomalias.'"
+    steps:
+      - "Instalar confluent-kafka pra Python"
+      - "Criar producer que simula leituras de sensores"
+      - "Gerar dados com distribuição realista (normal + outliers)"
+      - "Incluir campos: sensor_id, timestamp, tipo, valor, unidade"
+      - "Simular 100 sensores enviando a cada segundo"
+      - "Usar particionamento por sensor_id"
+    successCriteria:
+      - "Producer Python funcionando"
+      - "Dados realistas sendo gerados"
+      - "100+ mensagens por segundo"
+      - "Particionamento correto"
+
+  - id: 4
+    title: "Consumidor básico: Lendo o stream"
+    description: "A Juliana precisa ver os dados fluindo: 'Me mostra um consumidor que lê em tempo real e imprime. Quero ver os dados chegando.' Marcelo completou: 'Começa simples, depois adiciona processamento.'"
+    context: "Primeira integração. Juliana quer validar que os dados estão chegando no formato esperado antes de desenvolver os modelos."
+    steps:
+      - "Criar consumer Python que lê do topic sensor-readings"
+      - "Desserializar mensagens JSON"
+      - "Imprimir dados formatados no console"
+      - "Implementar graceful shutdown (SIGINT)"
+      - "Tratar erros de parsing"
+      - "Adicionar métricas básicas (msgs/sec)"
+    successCriteria:
+      - "Consumer lendo em tempo real"
+      - "Dados sendo impressos corretamente"
+      - "Shutdown graceful funcionando"
+      - "Métricas básicas"
+
+  - id: 5
+    title: "Detecção de anomalias em tempo real"
+    description: "A Juliana trouxe a lógica: 'Anomalia simples primeiro - se temperatura passar de 80C ou vibração passar de 400mm/s, é alerta. Depois refinamos com ML.' O Marcelo pediu pra implementar com windowing."
+    context: "Core feature. Andre: 'Se detectarmos uma anomalia em menos de 1 minuto, já é revolucionário. Hoje demoramos 24 horas.'"
+    steps:
+      - "Implementar detecção por threshold simples"
+      - "Usar tumbling window de 30 segundos"
+      - "Agregar: max, avg, count por sensor por janela"
+      - "Gerar alerta se threshold ultrapassado"
+      - "Publicar alertas em topic separado 'anomaly-alerts'"
+      - "Incluir contexto no alerta (sensor, valor, threshold)"
+    successCriteria:
+      - "Detecção por threshold funcionando"
+      - "Windowing de 30 segundos"
+      - "Alertas sendo publicados"
+      - "Latência < 1 minuto"
+
+  - id: 6
+    title: "Apache Flink: Processamento stateful"
+    description: "O Marcelo quer evoluir: 'Kafka Streams é bom pra casos simples. Pra coisas mais complexas, Flink é o estado da arte. Vamos migrar a detecção pra Flink e adicionar features mais sofisticadas.'"
+    context: "Upgrade de arquitetura. Marcelo: 'Flink tem windowing avançado, state management, e exactly-once. É o que o Spotify e Uber usam.'"
+    steps:
+      - "Configurar Flink com Docker (JobManager + TaskManager)"
+      - "Criar Flink job em Python (PyFlink)"
+      - "Ler do Kafka source"
+      - "Reimplementar detecção de anomalias em Flink"
+      - "Adicionar session windows pra detectar padrões prolongados"
+      - "Usar state pra comparar com leituras anteriores"
+    successCriteria:
+      - "Flink rodando"
+      - "Job processando stream do Kafka"
+      - "Detecção funcionando com Flink"
+      - "Session windows implementados"
+
+  - id: 7
+    title: "Sink: Persistência e alertas"
+    description: "O Andre quer ações: 'Detectar anomalia é bom. Mas preciso que gere alerta no PagerDuty, salve no banco pra histórico, e mande pro dashboard. Não adianta detectar e ninguém ver.' Hora de implementar sinks."
+    context: "Produção. Andre: 'Anomalia detectada tem que virar ação em menos de 30 segundos. Operador precisa saber imediatamente.'"
+    steps:
+      - "Criar sink PostgreSQL pra salvar todas as leituras (sampling)"
+      - "Criar sink PostgreSQL pra alertas"
+      - "Implementar webhook pra simular integração (PagerDuty/Slack)"
+      - "Adicionar deduplicação de alertas (não alertar repetido)"
+      - "Implementar rate limiting de alertas por sensor"
+      - "Testar fluxo end-to-end"
+    successCriteria:
+      - "Dados persistidos no PostgreSQL"
+      - "Alertas sendo salvos"
+      - "Webhook funcionando"
+      - "Deduplicação ativa"
+
+  - id: 8
+    title: "Backpressure e resiliência"
+    description: "O Marcelo simulou um cenário: 'E se o banco ficar lento? E se o Flink cair? O sistema não pode perder dados nem travar.' Hora de implementar resiliência."
+    context: "Produção é sobre lidar com falhas. Marcelo: 'Sistemas distribuídos falham. A questão é como o sistema se comporta quando falha.'"
+    steps:
+      - "Implementar checkpointing no Flink"
+      - "Configurar offset commit manual no Kafka"
+      - "Testar recovery: matar Flink e reiniciar"
+      - "Implementar backpressure handling"
+      - "Adicionar dead letter queue pra erros de parsing"
+      - "Documentar estratégia de recuperação"
+    successCriteria:
+      - "Checkpointing configurado"
+      - "Recovery funcionando"
+      - "Backpressure tratado"
+      - "Dead letter queue ativa"
+
+  - id: 9
+    title: "Monitoramento e observabilidade"
+    description: "O Andre quer visibilidade: 'Preciso de dashboard mostrando: mensagens por segundo, lag do consumer, alertas gerados, latência de processamento. Se algo der errado, quero saber na hora.'"
+    context: "Operações. Andre: 'Não dá pra operar no escuro. Métricas são tão importantes quanto a feature em si.'"
+    steps:
+      - "Expor métricas do Kafka (JMX ou Prometheus)"
+      - "Expor métricas do Flink"
+      - "Criar dashboard com métricas principais"
+      - "Monitorar consumer lag"
+      - "Alertar se lag passar de threshold"
+      - "Implementar healthcheck endpoints"
+    successCriteria:
+      - "Métricas expostas"
+      - "Dashboard funcionando"
+      - "Lag sendo monitorado"
+      - "Alertas de operação"
+
+  - id: 10
+    title: "Load test e documentação"
+    description: "O Andre quer a prova final: 'Simula 50 mil sensores. Quero ver o sistema aguentando a carga de produção. E documenta tudo - como operar, como escalar, como troubleshoot.' É a entrega final."
+    context: "Go-live em 2 semanas. Andre: 'Se passar no load test e tiver documentação, estamos prontos pra produção.'"
+    steps:
+      - "Escalar producer pra simular 50 mil sensores"
+      - "Medir throughput máximo do sistema"
+      - "Identificar e resolver bottlenecks"
+      - "Documentar arquitetura com diagramas"
+      - "Criar runbook de operações"
+      - "Documentar procedimentos de scaling"
+    successCriteria:
+      - "Load test com 50k sensores simulados"
+      - "Throughput documentado"
+      - "Arquitetura documentada"
+      - "Runbook de operações"

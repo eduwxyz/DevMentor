@@ -1,0 +1,150 @@
+id: data-warehouse-dbt
+title: "Data Warehouse da ShopFlow"
+description: "Você foi contratado como Data Engineer na ShopFlow, um e-commerce em crescimento acelerado. O time de dados está afogado em planilhas e queries ad-hoc. Sua missão é construir o primeiro Data Warehouse da empresa usando dbt, criando uma fonte única de verdade para toda a organização."
+category: data-engineering
+stack:
+  - dbt
+  - PostgreSQL
+  - SQL
+  - Jinja
+difficulty: intermediate
+estimatedHours: 12
+totalTasks: 8
+
+context:
+  company: "ShopFlow"
+  role: "Data Engineer"
+  team:
+    - name: "Marina"
+      role: "Head of Data"
+      description: "Sua gestora. Experiente em data warehousing, vai te orientar nas decisões de modelagem."
+    - name: "Pedro"
+      role: "Data Analyst"
+      description: "Consome os dados. Vai te dar feedback sobre o que o time de analytics precisa."
+    - name: "Carla"
+      role: "CEO"
+      description: "Quer dashboards confiáveis pra tomar decisões. Cansada de números que não batem."
+  situation: "A ShopFlow cresceu 300% no último ano mas a infraestrutura de dados não acompanhou. Cada time tem sua própria planilha, os números nunca batem, e ninguém confia nos relatórios. A Carla contratou a Marina pra resolver isso, e você é a primeira contratação do novo time de Data Engineering."
+
+tasks:
+  - id: 1
+    title: "Primeiro dia: Setup do ambiente dbt"
+    description: "Bem-vindo à ShopFlow! A Marina preparou o ambiente de desenvolvimento pra você. Seu primeiro passo é configurar o dbt e conectar ao banco de dados onde estão os dados brutos da empresa."
+    context: "Onboarding com a Marina. Ela explicou que os dados brutos estão no schema 'raw' do PostgreSQL - são dumps diários dos sistemas transacionais (pedidos, clientes, produtos)."
+    steps:
+      - "Instalar dbt-core e dbt-postgres (pip install)"
+      - "Executar dbt init para criar o projeto 'shopflow_dw'"
+      - "Configurar profiles.yml com as credenciais do banco (.env.example tem os valores)"
+      - "Testar conexão com dbt debug"
+    successCriteria:
+      - "Projeto dbt criado com estrutura padrão"
+      - "Conexão com PostgreSQL funcionando"
+      - "dbt debug retorna 'All checks passed'"
+
+  - id: 2
+    title: "Staging: Primeira camada de transformação"
+    description: "A Marina explicou a arquitetura: 'Primeiro criamos staging models que limpam e padronizam os dados brutos. Depois construímos em cima disso.' O Pedro mandou uma lista do que o time precisa com urgência: dados de pedidos e clientes."
+    context: "Reunião de alinhamento. Marina desenhou no quadro: raw -> staging -> marts. Você vai começar pela camada staging."
+    steps:
+      - "Criar pasta models/staging/"
+      - "Criar stg_customers.sql lendo de raw.customers"
+      - "Criar stg_orders.sql lendo de raw.orders"
+      - "Criar stg_order_items.sql lendo de raw.order_items"
+      - "Criar stg_products.sql lendo de raw.products"
+      - "Executar dbt run e verificar se as views foram criadas"
+    successCriteria:
+      - "4 modelos de staging criados"
+      - "dbt run executa sem erros"
+      - "Views criadas no schema de desenvolvimento"
+
+  - id: 3
+    title: "Limpeza e padronização dos dados"
+    description: "O Pedro testou os staging models e encontrou problemas: 'Tem coluna com nome diferente em cada tabela, datas em formatos estranhos, e valores nulos onde não deveria.' A Marina pediu pra você padronizar tudo."
+    context: "Code review com a Marina. Ela mostrou o style guide de SQL da ShopFlow: snake_case, datas como DATE, valores monetários como NUMERIC(10,2)."
+    steps:
+      - "Renomear colunas para snake_case (customerName -> customer_name)"
+      - "Converter tipos de dados (datas, números)"
+      - "Tratar valores nulos com COALESCE onde fizer sentido"
+      - "Adicionar coluna _loaded_at com a data de processamento"
+      - "Usar CTEs pra organizar as transformações"
+    successCriteria:
+      - "Todas as colunas em snake_case"
+      - "Tipos de dados corretos"
+      - "Código organizado com CTEs"
+
+  - id: 4
+    title: "Dimensões: dim_customers e dim_products"
+    description: "A Marina marcou uma sessão de modelagem dimensional com você. 'Agora vamos criar as dimensões - tabelas que descrevem as entidades do negócio. Clientes e produtos são as mais importantes pro Pedro.'"
+    context: "Workshop de modelagem. Marina explicou Star Schema: fatos no centro (métricas) cercados por dimensões (contexto). Você vai criar as primeiras dimensões."
+    steps:
+      - "Criar pasta models/marts/core/"
+      - "Criar dim_customers.sql com surrogate key"
+      - "Criar dim_products.sql com atributos descritivos"
+      - "Usar macro generate_surrogate_key do dbt_utils"
+      - "Materializar como table (não view)"
+      - "Adicionar config de schema para 'analytics'"
+    successCriteria:
+      - "dim_customers com surrogate key funcionando"
+      - "dim_products com categorias e atributos"
+      - "Ambas materializadas como tables"
+
+  - id: 5
+    title: "Fato principal: fct_orders"
+    description: "Pedro está ansioso: 'Preciso da tabela de pedidos pra ontem! O time de marketing quer saber receita por canal e a Carla quer o relatório mensal.' A Marina disse que é hora de criar a fact table principal."
+    context: "Daily standup. Todo mundo esperando a fct_orders. Marina lembrou: 'Fact tables guardam métricas e foreign keys pras dimensões. Pensa em quem, o que, quando, quanto.'"
+    steps:
+      - "Criar fct_orders.sql na pasta marts/core/"
+      - "Fazer JOIN com dims para obter surrogate keys"
+      - "Incluir métricas: order_total, quantity, discount_amount"
+      - "Incluir FKs: customer_key, product_key, order_date"
+      - "Granularidade: uma linha por item do pedido"
+    successCriteria:
+      - "fct_orders criada com todas as métricas"
+      - "JOINs com dimensões funcionando"
+      - "Granularidade correta (item level)"
+
+  - id: 6
+    title: "Métricas de negócio agregadas"
+    description: "A Carla pediu um favor: 'Preciso de um relatório diário de vendas pro board. Receita total, número de pedidos, ticket médio. E quero ver a evolução dia a dia.' Marina sugeriu criar modelos agregados."
+    context: "Reunião com a Carla. Ela mostrou o Excel que usa hoje - cheio de fórmulas quebradas. Quer substituir por algo confiável que atualize automaticamente."
+    steps:
+      - "Criar pasta models/marts/marketing/"
+      - "Criar agg_daily_sales.sql com métricas diárias"
+      - "Incluir: total_revenue, total_orders, avg_order_value"
+      - "Adicionar métricas cumulativas (running total)"
+      - "Usar window functions para calcular variação dia-a-dia"
+    successCriteria:
+      - "Agregação diária funcionando"
+      - "Métricas calculadas corretamente"
+      - "Variação percentual dia-a-dia"
+
+  - id: 7
+    title: "Qualidade de dados com dbt tests"
+    description: "A Marina fez uma revisão do projeto: 'Tá ficando ótimo, mas precisamos garantir qualidade. Se entrar dado ruim, o DW inteiro fica comprometido. Vamos adicionar testes automáticos.'"
+    context: "Sessão de code review. Marina explicou que dbt tem testes built-in (unique, not_null) e dá pra criar testes customizados. 'Roda dbt test toda vez antes de fazer deploy.'"
+    steps:
+      - "Criar arquivo models/staging/schema.yml"
+      - "Adicionar testes de unique nas primary keys"
+      - "Adicionar testes de not_null nos campos obrigatórios"
+      - "Adicionar testes de relationships (FK válidas)"
+      - "Criar pelo menos 1 teste customizado (ex: valores positivos)"
+      - "Executar dbt test e garantir que todos passam"
+    successCriteria:
+      - "Todos os modelos têm testes definidos"
+      - "dbt test passa sem erros"
+      - "Pelo menos 1 teste customizado"
+
+  - id: 8
+    title: "Documentação e entrega"
+    description: "Último dia do sprint! A Marina quer apresentar o DW pro time todo. 'Documentação é tão importante quanto o código. Quero que qualquer pessoa consiga entender o que cada modelo faz só olhando a doc.'"
+    context: "Sprint review amanhã. A Carla vai participar e quer ver o lineage graph. Pedro quer saber como usar as novas tabelas. Hora de documentar tudo."
+    steps:
+      - "Adicionar description pra cada modelo no schema.yml"
+      - "Documentar cada coluna importante"
+      - "Adicionar docs blocks pra explicações mais longas"
+      - "Executar dbt docs generate"
+      - "Executar dbt docs serve e revisar o lineage"
+    successCriteria:
+      - "Todos os modelos documentados"
+      - "Colunas principais com descrição"
+      - "Lineage graph mostrando fluxo completo"
