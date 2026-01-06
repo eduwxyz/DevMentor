@@ -1,0 +1,177 @@
+id: api-rest-basics
+title: "Backend da FastMenu"
+description: "Você acabou de ser contratado como dev junior na FastMenu, uma startup de delivery que está correndo pra lançar o MVP em 3 meses. Seu primeiro projeto é criar a API que vai alimentar o app mobile. O Carlos, Tech Lead da empresa, vai te mentorar durante o processo."
+category: software
+stack:
+  - Node.js
+  - Express
+  - PostgreSQL
+  - REST API
+difficulty: beginner
+estimatedHours: 10
+totalTasks: 10
+
+context:
+  company: "FastMenu"
+  role: "Desenvolvedor Backend Junior"
+  team:
+    - name: "Carlos"
+      role: "Tech Lead"
+      description: "Seu mentor. Experiente, direto, e vai te ajudar sem dar código pronto."
+    - name: "Ana"
+      role: "Product Manager"
+      description: "Define os requisitos e prioridades. Suas tasks vem dela."
+    - name: "Lucas"
+      role: "CEO"
+      description: "Fundou a startup. Quer lançar rápido mas com qualidade."
+  situation: "A FastMenu já tem um time mobile desenvolvendo o app. Eles estão esperando sua API pra integrar. Você tem autonomia pra decidir como implementar, mas precisa seguir o contrato da API que a Ana definiu."
+
+tasks:
+  - id: 1
+    title: "Primeiro dia: Setup do ambiente"
+    description: "Bem-vindo à FastMenu! O Carlos deixou um checklist pra você configurar seu ambiente de desenvolvimento. Ele disse que prefere que você aprenda fazendo, então não tem nada pronto - você vai montar tudo do zero."
+    context: "É seu primeiro dia. O Carlos te passou o acesso ao repo e pediu pra você deixar o ambiente rodando até o fim do dia."
+    steps:
+      - "Inicializar o projeto Node.js com npm init"
+      - "Instalar Express e nodemon como dependências"
+      - "Criar a estrutura de pastas (src/routes, src/controllers)"
+      - "Configurar o script 'dev' no package.json pra rodar com nodemon"
+      - "Criar um servidor básico que responde 'FastMenu API v1' na rota /"
+    successCriteria:
+      - "npm run dev inicia o servidor sem erros"
+      - "GET http://localhost:3000/ retorna 'FastMenu API v1'"
+      - "Estrutura de pastas criada conforme padrão"
+
+  - id: 2
+    title: "Listando restaurantes"
+    description: "A Ana criou a primeira user story: 'Como usuário, quero ver a lista de restaurantes disponíveis para escolher onde pedir'. O time mobile já ta esperando esse endpoint."
+    context: "Standup de manhã. A Ana disse que o time mobile precisa desse endpoint até amanhã pra começar a integrar a tela inicial do app."
+    steps:
+      - "Criar o arquivo src/routes/restaurants.js"
+      - "Implementar GET /api/restaurants que retorna a lista de restaurantes"
+      - "Por enquanto, usar o arquivo data/restaurants.json como fonte de dados"
+      - "Retornar os campos: id, name, category, rating, deliveryTime, imageUrl"
+      - "Registrar a rota no servidor principal"
+    successCriteria:
+      - "GET /api/restaurants retorna status 200"
+      - "Response é um array JSON com os restaurantes"
+      - "Cada restaurante tem os campos obrigatórios"
+
+  - id: 3
+    title: "Filtrando por categoria"
+    description: "A Ana adicionou um refinamento: 'O usuário quer filtrar restaurantes por categoria (pizza, sushi, hamburguer...)'. O time mobile precisa de um query parameter."
+    context: "A Ana mostrou o mockup do app - tem um carrossel de categorias na tela inicial. Quando o usuário clica numa categoria, precisa filtrar os restaurantes."
+    steps:
+      - "Adicionar suporte a query parameter ?category= no GET /api/restaurants"
+      - "Se category for passado, filtrar restaurantes por essa categoria"
+      - "Se category não for passado, retornar todos"
+      - "Fazer o filtro case-insensitive (Pizza = pizza = PIZZA)"
+    successCriteria:
+      - "GET /api/restaurants?category=pizza retorna só pizzarias"
+      - "GET /api/restaurants?category=SUSHI funciona (case-insensitive)"
+      - "GET /api/restaurants sem filtro retorna todos"
+
+  - id: 4
+    title: "Detalhes e cardápio do restaurante"
+    description: "Nova user story da Ana: 'Quando o usuário clica num restaurante, precisa ver os detalhes e o cardápio completo'. Esse é o endpoint mais importante pro fluxo de pedido."
+    context: "O Lucas participou da daily hoje. Ele enfatizou que essa tela é crucial - é onde o usuário decide se vai pedir ou não. Precisa carregar rápido e ter todas as infos."
+    steps:
+      - "Criar GET /api/restaurants/:id que retorna um restaurante específico"
+      - "Incluir o cardápio completo (menu) na resposta"
+      - "Usar o arquivo data/menus.json pra buscar o cardápio por restaurantId"
+      - "Se o restaurante não existir, retornar 404 com mensagem de erro"
+    successCriteria:
+      - "GET /api/restaurants/1 retorna o restaurante com id 1"
+      - "Response inclui array 'menu' com os itens do cardápio"
+      - "GET /api/restaurants/999 retorna 404"
+
+  - id: 5
+    title: "Conectando ao PostgreSQL"
+    description: "O Carlos marcou uma call com você. Ele disse que ta na hora de parar de usar JSON e conectar num banco de verdade. A FastMenu usa PostgreSQL em produção."
+    context: "O Carlos explicou que dados em arquivo JSON não escalam. Com o lançamento chegando, precisamos de um banco de dados de verdade. Ele já deixou as instruções no .env.example."
+    steps:
+      - "Instalar pg (node-postgres) como dependência"
+      - "Criar arquivo src/config/database.js com a conexão"
+      - "Usar variáveis de ambiente (.env) pra configuração do banco"
+      - "Criar um script pra testar a conexão"
+      - "Rodar o script SQL (data/seed.sql) pra criar tabelas e popular dados"
+    successCriteria:
+      - "Conexão com PostgreSQL funcionando"
+      - "Variáveis de ambiente sendo usadas (não hardcoded)"
+      - "Tabelas criadas e dados populados"
+
+  - id: 6
+    title: "Migrando restaurantes pro banco"
+    description: "Agora que o banco ta conectado, a Ana pediu pra migrar o endpoint de restaurantes. O time mobile não pode perceber a mudança - a API tem que continuar funcionando igual."
+    context: "A Ana enfatizou: 'O contrato da API não pode mudar. O time mobile já integrou e ta funcionando. Só muda a fonte de dados por baixo dos panos.'"
+    steps:
+      - "Refatorar GET /api/restaurants pra buscar do PostgreSQL"
+      - "Manter o filtro por categoria funcionando"
+      - "Garantir que o formato da resposta é idêntico ao anterior"
+      - "Refatorar GET /api/restaurants/:id também (com cardápio)"
+    successCriteria:
+      - "Todos os endpoints de restaurantes funcionam igual"
+      - "Dados vem do PostgreSQL"
+      - "Filtro por categoria continua funcionando"
+
+  - id: 7
+    title: "Criando pedidos"
+    description: "User story crítica da Ana: 'Como usuário, quero fazer um pedido selecionando itens do cardápio'. Esse é o core do negócio - sem isso não tem FastMenu."
+    context: "Reunião com o Lucas. Ele disse que esse endpoint é o mais importante do MVP. Precisa funcionar perfeitamente porque envolve dinheiro."
+    steps:
+      - "Criar POST /api/orders pra criar um novo pedido"
+      - "Validar campos obrigatórios: restaurantId, items (array), customerName, customerPhone"
+      - "Cada item precisa ter: menuItemId e quantity"
+      - "Calcular o total do pedido baseado nos preços do cardápio"
+      - "Salvar o pedido no PostgreSQL com status 'pending'"
+      - "Retornar o pedido criado com id e total calculado"
+    successCriteria:
+      - "POST /api/orders cria pedido e retorna 201"
+      - "Validação rejeita pedidos sem campos obrigatórios (400)"
+      - "Total é calculado corretamente baseado nos preços"
+      - "Pedido é salvo no banco com status 'pending'"
+
+  - id: 8
+    title: "Acompanhando pedidos"
+    description: "Ana criou mais uma user story: 'Como usuário, quero ver o status do meu pedido pra saber quando vai chegar'. O time mobile precisa mostrar uma tela de acompanhamento."
+    context: "O fluxo de status é: pending -> confirmed -> preparing -> delivering -> delivered. Por enquanto só precisamos do GET, a atualização de status vai ser feita pelo admin depois."
+    steps:
+      - "Criar GET /api/orders/:id pra buscar um pedido específico"
+      - "Retornar todos os dados do pedido incluindo status"
+      - "Incluir os detalhes dos itens (nome, preço, quantidade)"
+      - "Incluir dados do restaurante no response"
+      - "Se o pedido não existir, retornar 404"
+    successCriteria:
+      - "GET /api/orders/1 retorna o pedido completo"
+      - "Response inclui status atual do pedido"
+      - "Itens vem com detalhes (não só IDs)"
+
+  - id: 9
+    title: "Tratamento de erros global"
+    description: "O Carlos revisou seu código e deixou um feedback: 'Ta funcionando, mas o tratamento de erros ta espalhado. Vamos centralizar num middleware pra ficar mais profissional.'"
+    context: "Code review com o Carlos. Ele explicou que em produção, erros precisam ser tratados de forma consistente pra facilitar debug e dar uma boa experiência pro usuário."
+    steps:
+      - "Criar middleware de tratamento de erros em src/middlewares/errorHandler.js"
+      - "Padronizar formato de erro: { error: true, message: string, statusCode: number }"
+      - "Logar erros no console com timestamp"
+      - "Não expor detalhes internos (stack trace) pro cliente"
+      - "Aplicar o middleware em todas as rotas"
+    successCriteria:
+      - "Todos os erros seguem o mesmo formato JSON"
+      - "Erros são logados no console com detalhes"
+      - "Cliente recebe mensagens de erro amigáveis"
+
+  - id: 10
+    title: "Documentação e entrega"
+    description: "Último dia do sprint! A Ana pediu pra você documentar a API antes de entregar. O time mobile vai usar essa documentação pra integrar as últimas telas."
+    context: "Sprint review amanhã. O Lucas quer ver a API funcionando e a documentação pronta. Se tudo der certo, semana que vem começa o beta testing."
+    steps:
+      - "Atualizar o README.md com instruções de setup completas"
+      - "Documentar todos os endpoints (método, rota, parâmetros, response)"
+      - "Incluir exemplos de request/response pra cada endpoint"
+      - "Adicionar seção de códigos de erro possíveis"
+      - "Testar todos os endpoints uma última vez"
+    successCriteria:
+      - "README.md completo com setup e endpoints"
+      - "Cada endpoint documentado com exemplo"
+      - "Todos os endpoints funcionando corretamente"

@@ -1,0 +1,199 @@
+id: ecommerce-api
+title: "Marketplace da UrbanShop"
+description: "Você foi contratado como desenvolvedor backend senior na UrbanShop, um marketplace que conecta pequenos comerciantes a consumidores. O sistema atual é um monolito que não aguenta mais a Black Friday. Sua missão: construir uma API robusta, escalável e preparada pra milhões de requisições."
+category: software
+stack:
+  - Node.js
+  - Express
+  - PostgreSQL
+  - Redis
+  - Docker
+difficulty: advanced
+estimatedHours: 16
+totalTasks: 10
+
+context:
+  company: "UrbanShop"
+  role: "Desenvolvedor Backend Senior"
+  team:
+    - name: "Patricia"
+      role: "CTO"
+      description: "Arquiteta com passagem por Amazon e Mercado Livre. Expert em sistemas de alta escala. Seu olhar é cirúrgico."
+    - name: "Diego"
+      role: "Product Manager"
+      description: "Conhece cada métrica do marketplace. Obcecado com conversão e experiência do vendedor."
+    - name: "Amanda"
+      role: "CEO"
+      description: "Fundadora. Começou vendendo artesanato, hoje tem 10 mil vendedores na plataforma. Quer chegar a 100 mil."
+  situation: "A UrbanShop caiu na última Black Friday. 4 horas fora do ar. Perderam R$2 milhões em vendas e a confiança de centenas de vendedores. A Amanda prometeu publicamente que isso nunca mais aconteceria. A Patricia foi contratada pra garantir isso, e ela escolheu você pro time. A próxima Black Friday é em 5 meses."
+
+tasks:
+  - id: 1
+    title: "Post-mortem: O que causou a queda"
+    description: "Primeiro dia. A Patricia te passou o post-mortem da Black Friday: 'Quero que você leia, entenda, e me diga quais problemas de arquitetura você identifica. Sem medo de ser crítico - precisamos da verdade.' O documento ta em docs/black-friday-postmortem.md."
+    context: "A Patricia explicou: 'Entender o que deu errado é mais importante do que sair codando. A gente não pode repetir os mesmos erros.'"
+    steps:
+      - "Ler o post-mortem da Black Friday"
+      - "Identificar os bottlenecks: banco, falta de cache, queries N+1"
+      - "Analisar o código legado em legacy/"
+      - "Documentar os principais problemas de arquitetura"
+      - "Propor soluções de alto nível pra cada problema"
+    successCriteria:
+      - "Problemas identificados e documentados"
+      - "Análise de root cause pra cada falha"
+      - "Propostas de solução apresentadas"
+
+  - id: 2
+    title: "Arquitetura do novo catálogo de produtos"
+    description: "A Patricia definiu a prioridade: 'O catálogo é o coração do marketplace. Na Black Friday, as queries de produto eram o gargalo. Vamos reconstruir com performance em mente desde o início.'"
+    context: "Workshop de arquitetura. Patricia desenhou: 'Catálogo precisa de busca rápida, filtros, ordenação. Pensa em como o Mercado Livre funciona. Vamos começar simples e escalar.'"
+    steps:
+      - "Modelar tabelas: products, categories, sellers"
+      - "Criar índices pra queries frequentes"
+      - "Implementar GET /products com paginação (limit/offset)"
+      - "Adicionar filtros: category, price_min, price_max, seller"
+      - "Adicionar ordenação: price, created_at, relevance"
+      - "Otimizar query pra evitar N+1"
+    successCriteria:
+      - "Catálogo funcionando com paginação"
+      - "Filtros e ordenação implementados"
+      - "Query otimizada (1-2 queries por request)"
+      - "Tempo de resposta < 100ms"
+
+  - id: 3
+    title: "Cache com Redis"
+    description: "A Patricia mostrou os números: '90% das requisições de catálogo são pra mesma busca. Estamos batendo no banco milhares de vezes por minuto com dados que não mudam. Redis resolve isso.' Hora de implementar cache."
+    context: "Sessão sobre caching. Patricia explicou invalidação, TTL, cache stampede. 'Cache mal feito é pior que nenhum cache. Vamos fazer direito.'"
+    steps:
+      - "Configurar conexão com Redis"
+      - "Implementar cache-aside pattern no catálogo"
+      - "Definir TTL de 5 minutos pra listings"
+      - "Implementar cache key baseada nos parametros da query"
+      - "Adicionar invalidação quando produto é atualizado"
+      - "Implementar métricas: cache hit/miss ratio"
+    successCriteria:
+      - "Redis integrado"
+      - "Catálogo usando cache"
+      - "Invalidação funcionando"
+      - "Hit ratio visível nos logs"
+
+  - id: 4
+    title: "Carrinho de compras"
+    description: "O Diego trouxe os requisitos do carrinho: 'Usuário adiciona produtos de vários vendedores, ajusta quantidade, vê o total. Carrinho precisa persistir por 7 dias mesmo se usuário deslogar. E precisa ser rápido - usuário impaciente abandona.'"
+    context: "Feature core pro checkout. Diego mostrou dados: 30% de abandono de carrinho. 'Cada segundo de demora aumenta o abandono.'"
+    steps:
+      - "Decidir storage: banco vs Redis (considerar trade-offs)"
+      - "Criar endpoints: POST, GET, PUT, DELETE /cart/items"
+      - "Validar disponibilidade de estoque ao adicionar"
+      - "Calcular total considerando preços e quantidades"
+      - "Associar carrinho ao usuário (ou session pra visitantes)"
+      - "Implementar TTL de 7 dias"
+    successCriteria:
+      - "CRUD de carrinho funcionando"
+      - "Validação de estoque"
+      - "Total calculado corretamente"
+      - "Persistência de 7 dias"
+
+  - id: 5
+    title: "Checkout e processamento de pedidos"
+    description: "A Patricia marcou: 'Checkout é o momento mais crítico. Se falhar aqui, perdemos a venda e a confiança. Precisa ser transacional, atômico, e lidar com falhas gracefully.' O Diego completou: 'E precisa ser rápido!'"
+    context: "Core business. Patricia desenhou o fluxo: validar estoque -> reservar -> processar pagamento -> confirmar. 'Se qualquer etapa falhar, precisa de rollback limpo.'"
+    steps:
+      - "Criar POST /orders (checkout)"
+      - "Implementar em transação (BEGIN, COMMIT, ROLLBACK)"
+      - "Validar estoque de todos os itens"
+      - "Reservar estoque (decrement atômico)"
+      - "Criar pedido com status 'pending'"
+      - "Simular processamento de pagamento (mock)"
+      - "Atualizar status pra 'confirmed' ou 'failed'"
+      - "Em caso de falha, reverter estoque"
+    successCriteria:
+      - "Checkout atômico e transacional"
+      - "Estoque sendo decrementado corretamente"
+      - "Rollback em caso de falha"
+      - "Pedido criado com status correto"
+
+  - id: 6
+    title: "Gestão de estoque e concorrência"
+    description: "A Patricia trouxe um cenário: 'Black Friday: 1000 pessoas tentando comprar o último item de um produto. Se não tratar concorrência, vamos vender mais do que temos e ter que cancelar pedidos. Isso é inaceitável.' Hora de resolver race conditions."
+    context: "Problema clássico de e-commerce. Patricia explicou: 'Optimistic locking, pessimistic locking, ou fila. Cada um tem trade-offs. Vamos implementar o mais adequado.'"
+    steps:
+      - "Analisar o problema de race condition no estoque"
+      - "Implementar row-level locking (SELECT FOR UPDATE)"
+      - "Testar com requisições concorrentes simuladas"
+      - "Garantir que não vende mais que o estoque"
+      - "Considerar fila pra casos extremos (ex: Redis queue)"
+      - "Documentar a estratégia escolhida"
+    successCriteria:
+      - "Race condition resolvida"
+      - "Testes concorrentes passando"
+      - "Estoque nunca fica negativo"
+      - "Estratégia documentada"
+
+  - id: 7
+    title: "API do vendedor"
+    description: "O Diego lembrou: 'A gente fala muito do comprador, mas o vendedor é nosso cliente também. Eles precisam de API pra cadastrar produtos, ver pedidos, atualizar estoque. Hoje fazem tudo manualmente no admin.' A Amanda concordou: 'Vendedor feliz = mais produtos = mais vendas.'"
+    context: "Expansão do marketplace. Diego mostrou que vendedores grandes querem integrar com seus sistemas. 'API aberta vai atrair vendedores maiores.'"
+    steps:
+      - "Criar autenticação específica pra sellers (API key ou OAuth)"
+      - "POST /seller/products - cadastrar produto"
+      - "PUT /seller/products/:id - atualizar produto/estoque"
+      - "GET /seller/orders - listar pedidos do vendedor"
+      - "Implementar rate limiting por seller"
+      - "Documentar API com exemplos"
+    successCriteria:
+      - "CRUD de produtos funcionando"
+      - "Seller só acessa próprios dados"
+      - "Rate limiting ativo"
+      - "Documentação clara"
+
+  - id: 8
+    title: "Busca com relevância"
+    description: "O Diego mostrou dados: '60% dos usuários usam a busca. Se não achar o que quer em 2 segundos, vai pro concorrente. A busca atual é um LIKE %termo% - horrível.' Patricia sugeriu: 'Vamos implementar full-text search no Postgres primeiro, depois vemos se precisa de Elasticsearch.'"
+    context: "Feature de alto impacto. Patricia explicou: 'Postgres tem full-text search nativo. Pra nosso volume, deve dar conta. Se não der, migramos pra Elastic depois.'"
+    steps:
+      - "Configurar full-text search no PostgreSQL"
+      - "Criar coluna tsvector com dados de produto (nome, descrição, categoria)"
+      - "Criar índice GIN pra busca eficiente"
+      - "Implementar GET /products/search com ranking de relevância"
+      - "Adicionar autocomplete básico (primeiros 5 resultados)"
+      - "Medir tempo de resposta"
+    successCriteria:
+      - "Busca por texto funcionando"
+      - "Resultados ordenados por relevância"
+      - "Tempo de resposta < 200ms"
+      - "Autocomplete básico"
+
+  - id: 9
+    title: "Monitoramento e observabilidade"
+    description: "A Patricia é séria: 'Na Black Friday passada, a gente só soube que caiu quando os usuários começaram a reclamar no Twitter. Inaceitável. Precisamos de monitoramento proativo - saber antes do usuário.' Hora de instrumentar tudo."
+    context: "Cultura de observabilidade. Patricia: 'Logs estruturados, métricas, health checks. Quero ver um dashboard com tudo.'"
+    steps:
+      - "Implementar logging estruturado (JSON) com request ID"
+      - "Criar endpoint /health com status dos serviços (banco, Redis)"
+      - "Adicionar métricas: latência por endpoint, taxa de erro, throughput"
+      - "Implementar middleware que loga tempo de resposta"
+      - "Criar alertas básicos (erro rate > 1%, latência > 500ms)"
+    successCriteria:
+      - "Logs estruturados em JSON"
+      - "Health check funcionando"
+      - "Métricas sendo coletadas"
+      - "Alertas configurados"
+
+  - id: 10
+    title: "Load testing: Simulando Black Friday"
+    description: "A Amanda veio pessoalmente: 'Quero ver essa API aguentando a Black Friday antes de acontecer. Simula o pior cenário possível. Se cair no teste, melhor do que cair na vida real.' Patricia preparou o ambiente de stress test."
+    context: "Prova de fogo. Patricia definiu: '10x o tráfego normal, por 30 minutos. Todos os endpoints. Vamos ver o que quebra.'"
+    steps:
+      - "Configurar ferramenta de load test (k6, artillery, ou similar)"
+      - "Criar cenários: browse catálogo, adicionar ao carrinho, checkout"
+      - "Simular 1000 usuários concorrentes"
+      - "Identificar bottlenecks no teste"
+      - "Otimizar os pontos fracos encontrados"
+      - "Rodar teste novamente e comparar metricas"
+      - "Documentar capacidade máxima da API"
+    successCriteria:
+      - "Load test executado com sucesso"
+      - "Bottlenecks identificados e corrigidos"
+      - "API estável sob carga"
+      - "Relatório de capacidade documentado"

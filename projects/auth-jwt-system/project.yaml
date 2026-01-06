@@ -1,0 +1,193 @@
+id: auth-jwt-system
+title: "Autenticação da FinSecure"
+description: "Você foi contratado como desenvolvedor backend na FinSecure, uma fintech que está prestes a lançar seu app de investimentos. O problema: o sistema de autenticação atual é uma bomba-relógio de segurança. Sua missão é reconstruir todo o sistema de auth usando JWT, refresh tokens e as melhores práticas de segurança."
+category: software
+stack:
+  - Node.js
+  - Express
+  - JWT
+  - bcrypt
+  - PostgreSQL
+difficulty: intermediate
+estimatedHours: 12
+totalTasks: 10
+
+context:
+  company: "FinSecure"
+  role: "Desenvolvedor Backend"
+  team:
+    - name: "Rafael"
+      role: "Tech Lead / Security Champion"
+      description: "Ex-engenheiro de segurança do Nubank. Obcecado por segurança. Vai revisar cada linha do seu código."
+    - name: "Julia"
+      role: "Product Manager"
+      description: "Veio do mercado financeiro. Entende compliance e regulação. Cobra muito a experiência do usuário."
+    - name: "Marcos"
+      role: "CTO"
+      description: "Fundador técnico. Já sofreu um breach numa startup anterior. Desde então, segurança é prioridade zero."
+  situation: "A FinSecure cresceu rápido demais. O sistema de auth foi feito às pressas no MVP e tem falhas graves: senhas em MD5, tokens que nunca expiram, sem rate limiting. O Banco Central está prestes a auditar, e o Marcos ta em pânico. Você foi contratado especificamente pra resolver isso - e tem 3 semanas."
+
+tasks:
+  - id: 1
+    title: "Auditoria de segurança: O que temos hoje"
+    description: "Primeiro dia. O Rafael te passou acesso ao repositório atual e pediu uma auditoria. 'Quero que você documente todas as falhas de segurança que encontrar. Sem julgamento - a gente sabe que ta ruim. Preciso de um diagnóstico honesto.'"
+    context: "Onboarding com o Rafael. Ele explicou que o sistema atual foi feito por um estagiário que saiu da empresa. Ninguém mexeu desde então. O código ta no arquivo legacy/auth.js."
+    steps:
+      - "Analisar o código atual em legacy/auth.js"
+      - "Identificar todas as vulnerabilidades de segurança"
+      - "Documentar cada problema encontrado com severidade (crítica, alta, média, baixa)"
+      - "Criar um plano de ação priorizando os fixes"
+      - "Apresentar pro Rafael em formato de relatório"
+    successCriteria:
+      - "Relatório de auditoria documentado"
+      - "Vulnerabilidades classificadas por severidade"
+      - "Plano de ação com prioridades definidas"
+
+  - id: 2
+    title: "Setup do novo sistema de auth"
+    description: "O Rafael aprovou seu plano. 'Vamos começar do zero. Cria uma estrutura nova, limpa, seguindo as melhores práticas. Esquece o código antigo - vamos migrar os usuários depois.' Hora de montar a fundação."
+    context: "Planning com o time. Decisão: criar sistema novo em paralelo, migrar usuários gradualmente, desligar o antigo só quando tiver 100% de confiança."
+    steps:
+      - "Criar estrutura de pastas (src/auth, src/middlewares, src/utils)"
+      - "Configurar variáveis de ambiente pra segredos (JWT_SECRET, etc)"
+      - "Instalar dependências: jsonwebtoken, bcrypt, express-rate-limit"
+      - "Criar modelo de Usuário no banco com campos seguros"
+      - "Implementar hash de senha com bcrypt (custo mínimo 12)"
+    successCriteria:
+      - "Estrutura de pastas criada"
+      - "Variáveis de ambiente configuradas (não hardcoded)"
+      - "Modelo de usuário com senha hasheada"
+      - "bcrypt configurado com custo >= 12"
+
+  - id: 3
+    title: "Registro de usuários seguro"
+    description: "A Julia mandou os requisitos: 'O registro precisa ser simples mas seguro. Email válido, senha forte, confirmação de email. E por favor, mensagens de erro que façam sentido pro usuário.'"
+    context: "Reunião com Julia. Ela mostrou reclamações de usuários do sistema antigo: 'Erro 500', 'Algo deu errado'. Quer mensagens claras e úteis."
+    steps:
+      - "Criar endpoint POST /auth/register"
+      - "Validar email (formato e unicidade)"
+      - "Validar senha forte (mínimo 8 chars, maiúscula, número, especial)"
+      - "Hashear senha antes de salvar"
+      - "Retornar mensagens de erro claras e específicas"
+      - "Não revelar se email já existe (prevenir enumeração)"
+    successCriteria:
+      - "Registro funcionando com validações"
+      - "Senha sendo hasheada corretamente"
+      - "Mensagens de erro amigáveis"
+      - "Sem vazamento de informação sobre emails existentes"
+
+  - id: 4
+    title: "Login e geração de tokens JWT"
+    description: "O Rafael marcou uma sessão sobre JWT: 'Vou te explicar como funciona e os cuidados que precisamos ter. JWT é poderoso mas perigoso se mal implementado.' Hora de implementar o login."
+    context: "Workshop com Rafael. Ele desenhou o fluxo: login -> access token (curto) + refresh token (longo). Explicou os riscos de cada abordagem."
+    steps:
+      - "Criar endpoint POST /auth/login"
+      - "Validar credenciais contra banco"
+      - "Usar timing-safe comparison pra evitar timing attacks"
+      - "Gerar access token JWT (expira em 15 minutos)"
+      - "Gerar refresh token (expira em 7 dias)"
+      - "Armazenar refresh token no banco (pra poder invalidar)"
+      - "Retornar ambos tokens ao cliente"
+    successCriteria:
+      - "Login funcionando com email/senha"
+      - "Access token com expiracao curta (15min)"
+      - "Refresh token com expiracao longa (7 dias)"
+      - "Refresh tokens armazenados no banco"
+
+  - id: 5
+    title: "Middleware de autenticação"
+    description: "O Marcos apareceu na daily: 'Preciso que todas as rotas protegidas validem o token corretamente. Sem exceções. Uma falha aqui é game over.' O Rafael vai revisar pessoalmente esse código."
+    context: "Code review com Rafael agendado. Ele enfatizou: 'O middleware de auth é o portão de entrada. Tem que ser bulletproof.'"
+    steps:
+      - "Criar middleware authenticate.js"
+      - "Extrair token do header Authorization (Bearer)"
+      - "Validar assinatura do JWT"
+      - "Verificar se token não expirou"
+      - "Adicionar dados do usuário ao request (req.user)"
+      - "Tratar todos os casos de erro (token ausente, inválido, expirado)"
+    successCriteria:
+      - "Middleware validando tokens corretamente"
+      - "Erros específicos pra cada caso"
+      - "Dados do usuário disponíveis em req.user"
+      - "Rotas protegidas inacessíveis sem token válido"
+
+  - id: 6
+    title: "Refresh token e renovação"
+    description: "A Julia trouxe feedback do time mobile: 'O app não pode deslogar o usuário a cada 15 minutos. Precisa renovar o token automaticamente sem o usuário perceber.' Hora de implementar o refresh."
+    context: "O Rafael explicou o fluxo: quando access token expira, o app usa o refresh token pra pegar um novo access token. Se o refresh token também expirou, aí sim precisa logar de novo."
+    steps:
+      - "Criar endpoint POST /auth/refresh"
+      - "Receber refresh token no body"
+      - "Validar se refresh token existe no banco e não foi revogado"
+      - "Validar se refresh token não expirou"
+      - "Gerar novo access token"
+      - "Opcionalmente, rotacionar o refresh token (refresh token rotation)"
+    successCriteria:
+      - "Refresh funcionando corretamente"
+      - "Tokens revogados são rejeitados"
+      - "Novo access token gerado com sucesso"
+
+  - id: 7
+    title: "Logout e revogação de tokens"
+    description: "O Marcos lembrou de um incidente: 'Na startup anterior, um funcionário demitido continuou com acesso por semanas porque não dava pra invalidar o token. Aqui não. Logout tem que ser real.'"
+    context: "Reunião de segurança. Decisão: implementar blacklist de tokens e invalidar todos os refresh tokens de um usuário quando necessário."
+    steps:
+      - "Criar endpoint POST /auth/logout"
+      - "Invalidar o refresh token usado (marcar como revogado no banco)"
+      - "Criar endpoint POST /auth/logout-all (logout de todos dispositivos)"
+      - "Invalidar TODOS os refresh tokens do usuário"
+      - "Considerar blacklist de access tokens (opcional, pra invalidação imediata)"
+    successCriteria:
+      - "Logout invalida refresh token"
+      - "Logout-all invalida todos os tokens do usuário"
+      - "Tokens revogados param de funcionar imediatamente"
+
+  - id: 8
+    title: "Rate limiting e proteção contra brute force"
+    description: "O Rafael mostrou os logs do sistema antigo: 'Olha isso - 50 mil tentativas de login de um mesmo IP em uma hora. Sem rate limiting, é convite pra brute force.' Hora de proteger."
+    context: "Análise de segurança. O Rafael explicou que login é o endpoint mais atacado. Precisa de rate limiting agressivo mas sem atrapalhar usuários legítimos."
+    steps:
+      - "Implementar rate limiting global (100 req/min por IP)"
+      - "Rate limiting específico pra auth (5 tentativas de login por minuto)"
+      - "Bloquear IP por 15 minutos apos 10 tentativas falhas"
+      - "Implementar backoff exponencial pra tentativas falhas"
+      - "Logar tentativas suspeitas pra monitoramento"
+    successCriteria:
+      - "Rate limiting funcionando por IP"
+      - "Bloqueio temporário após muitas falhas"
+      - "Logs de segurança sendo gerados"
+
+  - id: 9
+    title: "Reset de senha seguro"
+    description: "A Julia lembrou: 'Esqueci minha senha é a feature mais usada de auth. Mas também é a mais explorada. Tem que ser simples pro usuário e seguro contra ataques.' O Rafael fez uma lista de requisitos."
+    context: "Workshop sobre password reset. Rafael mostrou ataques comuns: token previsível, token sem expiração, enumeração de emails. 'Vamos fazer direito.'"
+    steps:
+      - "Criar endpoint POST /auth/forgot-password"
+      - "Gerar token aleatório seguro (crypto.randomBytes)"
+      - "Salvar hash do token no banco (não o token em si)"
+      - "Token expira em 1 hora"
+      - "Criar endpoint POST /auth/reset-password"
+      - "Validar token, atualizar senha, invalidar token"
+      - "Invalidar todas as sessões do usuário após reset"
+    successCriteria:
+      - "Forgot password gera token seguro"
+      - "Token expira em 1 hora"
+      - "Reset atualiza senha e invalida sessões"
+      - "Token só pode ser usado uma vez"
+
+  - id: 10
+    title: "Auditoria final e documentação"
+    description: "Último dia antes da auditoria do Banco Central! O Marcos quer uma revisão completa e documentação de tudo que foi implementado. 'Precisamos provar que seguimos as melhores práticas.'"
+    context: "Preparação pra auditoria. O Rafael vai fazer uma revisão de segurança final. Julia quer documentação clara pra compliance. Marcos quer dormir tranquilo."
+    steps:
+      - "Revisar todos os endpoints de auth"
+      - "Verificar se nenhum segredo está hardcoded"
+      - "Testar todos os fluxos (registro, login, refresh, logout, reset)"
+      - "Documentar a arquitetura de segurança"
+      - "Criar checklist de compliance (LGPD, PCI-DSS basics)"
+      - "Atualizar README com setup e endpoints"
+    successCriteria:
+      - "Todos os fluxos funcionando corretamente"
+      - "Nenhum segredo exposto no código"
+      - "Documentação completa"
+      - "Checklist de segurança aprovado pelo Rafael"

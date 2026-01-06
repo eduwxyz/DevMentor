@@ -1,0 +1,186 @@
+id: realtime-chat
+title: "Chat em Tempo Real da ConnectHub"
+description: "Você entrou como desenvolvedor fullstack na ConnectHub, uma startup que quer revolucionar a comunicação corporativa. O produto principal é um chat em tempo real com salas, mensagens privadas e notificações. O time anterior tentou usar polling e foi um desastre. Sua missão: reconstruir usando WebSockets."
+category: software
+stack:
+  - Node.js
+  - Socket.io
+  - Express
+  - React
+  - PostgreSQL
+difficulty: intermediate
+estimatedHours: 14
+totalTasks: 10
+
+context:
+  company: "ConnectHub"
+  role: "Desenvolvedor Fullstack"
+  team:
+    - name: "Fernanda"
+      role: "Tech Lead"
+      description: "Arquiteta de sistemas distribuídos. Expert em real-time. Vai te guiar nas decisões de arquitetura."
+    - name: "Bruno"
+      role: "Product Manager"
+      description: "Obcecado com UX. Quer que o chat seja tão fluido quanto o WhatsApp."
+    - name: "Camila"
+      role: "CEO"
+      description: "Fundadora. Fechou um piloto com uma empresa de 500 funcionários. Deadline apertado."
+  situation: "A ConnectHub tinha um chat baseado em polling que consumia 80% da CPU do servidor e tinha delay de 5 segundos nas mensagens. Os clientes reclamavam todo dia. A Camila contratou você especificamente porque viu seu projeto de WebSockets no GitHub. Agora ela espera um milagre em 4 semanas."
+
+tasks:
+  - id: 1
+    title: "Entendendo o problema: Polling vs WebSockets"
+    description: "A Fernanda marcou uma sessão de onboarding: 'Antes de codar, preciso que você entenda porque polling não funciona pra chat e como WebSockets resolvem. Vou te mostrar o sistema antigo e quero que você documente os problemas.'"
+    context: "Primeiro dia. Fernanda te deu acesso ao sistema legado. Está rodando mas é lento e consome muitos recursos. O código ta em legacy/polling-chat.js."
+    steps:
+      - "Analisar o sistema de polling atual"
+      - "Documentar problemas: latência, consumo de recursos, escalabilidade"
+      - "Pesquisar como WebSockets funcionam (handshake, conexão persistente)"
+      - "Comparar polling vs WebSockets em um documento"
+      - "Desenhar a arquitetura proposta pro novo sistema"
+    successCriteria:
+      - "Problemas do polling documentados"
+      - "Entendimento de WebSockets demonstrado"
+      - "Arquitetura proposta desenhada"
+
+  - id: 2
+    title: "Setup do servidor Socket.io"
+    description: "A Fernanda aprovou sua arquitetura. 'Vamos usar Socket.io - abstrai a complexidade de WebSockets e tem fallbacks automáticos. Começa configurando o servidor básico.' Hora de codar."
+    context: "A Fernanda explicou que Socket.io facilita muito, mas precisa configurar direito. 'CORS, autenticação, reconexão - tudo precisa estar certo desde o início.'"
+    steps:
+      - "Instalar socket.io e configurar com Express"
+      - "Configurar CORS pra permitir o frontend"
+      - "Criar evento de conexão básico (connection)"
+      - "Implementar log de conexões/desconexões"
+      - "Testar com cliente simples (pode ser o console do browser)"
+    successCriteria:
+      - "Servidor Socket.io rodando"
+      - "Conexões sendo logadas"
+      - "Cliente consegue conectar"
+
+  - id: 3
+    title: "Autenticação de WebSockets"
+    description: "A Fernanda alertou: 'WebSocket sem autenticação é um buraco de segurança gigante. Qualquer um pode conectar e ouvir todas as mensagens. Precisamos validar o token JWT na conexão.'"
+    context: "Sessão de segurança. Fernanda explicou que a autenticação acontece no handshake do WebSocket. 'O token vem no header ou na query. Se inválido, rejeita a conexão.'"
+    steps:
+      - "Extrair token JWT do handshake (auth header ou query param)"
+      - "Validar token usando a mesma lógica da API REST"
+      - "Rejeitar conexão se token inválido/expirado"
+      - "Armazenar dados do usuário no socket (socket.user)"
+      - "Testar: conexao sem token deve falhar"
+    successCriteria:
+      - "Autenticação funcionando no handshake"
+      - "Usuário disponível em socket.user"
+      - "Conexões sem token são rejeitadas"
+
+  - id: 4
+    title: "Salas de chat (rooms)"
+    description: "O Bruno trouxe os requisitos: 'Precisamos de salas de chat - cada departamento da empresa cliente vai ter sua sala. Usuário entra na sala, vê histórico, manda mensagem, todos na sala recebem.' A Fernanda disse que Socket.io tem rooms nativo."
+    context: "O Bruno desenhou o fluxo: usuário faz login -> vê lista de salas -> entra numa sala -> conversa. Pode estar em várias salas simultaneamente."
+    steps:
+      - "Criar evento 'join-room' que adiciona usuário a uma sala"
+      - "Criar evento 'leave-room' pra sair da sala"
+      - "Usar socket.join() e socket.leave() do Socket.io"
+      - "Notificar sala quando usuário entra/sai"
+      - "Implementar 'get-rooms' pra listar salas disponíveis"
+      - "Criar tabela de salas no banco"
+    successCriteria:
+      - "Usuário consegue entrar em salas"
+      - "Notificação de entrada/saída funcionando"
+      - "Lista de salas disponível"
+
+  - id: 5
+    title: "Mensagens em tempo real"
+    description: "O Bruno ta animado: 'Agora vem a parte boa - mensagens! Quando alguém manda uma mensagem, todos na sala tem que receber instantaneamente. E precisa persistir no banco pra ter histórico.'"
+    context: "Core feature do produto. Fernanda enfatizou: 'Persiste primeiro, emite depois. Se falhar o banco, não emite. Não queremos mensagens fantasma.'"
+    steps:
+      - "Criar evento 'send-message' que recebe conteudo e roomId"
+      - "Validar que usuário está na sala"
+      - "Salvar mensagem no banco (messages table)"
+      - "Emitir mensagem pra todos na sala (io.to(room).emit)"
+      - "Incluir dados do remetente (nome, avatar)"
+      - "Criar evento 'get-history' pra carregar mensagens antigas"
+    successCriteria:
+      - "Mensagens sendo enviadas em tempo real"
+      - "Mensagens persistidas no banco"
+      - "Histórico carregando corretamente"
+      - "Dados do remetente inclusos"
+
+  - id: 6
+    title: "Indicadores de presença e digitação"
+    description: "O Bruno quer aquele feeling de WhatsApp: 'Quero ver quem ta online, quem ta na sala, e quando alguém ta digitando. Esses detalhes fazem toda diferença na experiência.' A Fernanda disse que é mais simples do que parece."
+    context: "Feature de UX. Bruno mostrou referências: bolinha verde de online, 'digitando...' embaixo do nome. 'Parece detalhe, mas os usuários amam.'"
+    steps:
+      - "Rastrear usuários online (armazenar em memória/Redis)"
+      - "Emitir lista de usuários online na sala quando alguém entra"
+      - "Atualizar lista quando usuário entra/sai"
+      - "Implementar evento 'typing' que usuário emite quando começa a digitar"
+      - "Emitir 'user-typing' pros outros da sala"
+      - "Implementar timeout (para de mostrar 'digitando' apos 3s)"
+    successCriteria:
+      - "Lista de usuários online por sala"
+      - "Indicador de digitação funcionando"
+      - "Timeout implementado pra digitação"
+
+  - id: 7
+    title: "Mensagens privadas (DM)"
+    description: "A Camila entrou na daily: 'O cliente piloto pediu mensagens privadas urgente. Os funcionários querem poder conversar 1:1 sem criar sala.' Fernanda disse que dá pra fazer com rooms de 2 pessoas."
+    context: "Feature crítica pro piloto. A Camila enfatizou: 'Sem isso, o cliente não fecha. Prioridade máxima.'"
+    steps:
+      - "Criar sala privada com ID único pros 2 usuários (ex: dm_user1_user2)"
+      - "Evento 'start-dm' que cria ou recupera conversa existente"
+      - "Reutilizar lógica de mensagens pra DMs"
+      - "Listar conversas privadas do usuário"
+      - "Garantir que só os 2 usuários podem ver as mensagens"
+    successCriteria:
+      - "DMs funcionando entre 2 usuários"
+      - "Histórico de DMs persistido"
+      - "Lista de conversas privadas"
+      - "Privacidade garantida"
+
+  - id: 8
+    title: "Notificações e mensagens não lidas"
+    description: "O Bruno percebeu um problema: 'Se o usuário ta em outra sala, ele não sabe que chegou mensagem. Precisamos de notificações e contador de não lidas.' Fernanda sugeriu um sistema de read receipts."
+    context: "UX crítica. Bruno mostrou o problema: usuário perde mensagens importantes porque não tem notificação. 'Precisa de badge com número de não lidas.'"
+    steps:
+      - "Rastrear última mensagem lida por usuário por sala"
+      - "Calcular quantidade de mensagens não lidas"
+      - "Emitir notificação quando recebe mensagem em sala inativa"
+      - "Atualizar 'last_read' quando usuário visualiza sala"
+      - "Emitir evento 'unread-count' pro cliente atualizar badges"
+    successCriteria:
+      - "Contador de não lidas funcionando"
+      - "Notificação ao receber mensagem"
+      - "Marcação de lida ao visualizar"
+
+  - id: 9
+    title: "Escalabilidade com Redis"
+    description: "A Fernanda trouxe uma preocupação: 'Com um servidor ta funcionando. Mas e se precisar de 10 servidores? Socket.io em memória não escala. Precisamos de Redis como adapter.' Hora de pensar em escala."
+    context: "Arquitetura pra produção. Fernanda desenhou: múltiplos servidores, Redis Pub/Sub no meio, qualquer servidor pode emitir pra qualquer cliente."
+    steps:
+      - "Instalar @socket.io/redis-adapter"
+      - "Configurar conexão com Redis"
+      - "Aplicar o adapter no servidor Socket.io"
+      - "Testar com 2 instâncias do servidor"
+      - "Migrar dados de presença pro Redis (ao invés de memória)"
+    successCriteria:
+      - "Redis adapter configurado"
+      - "Funcionando com múltiplas instâncias"
+      - "Dados de presença no Redis"
+
+  - id: 10
+    title: "Frontend React e integração"
+    description: "Último sprint! O Bruno quer ver tudo funcionando junto: 'Me mostra o chat funcionando no browser. Login, salas, mensagens, tudo real-time. É a demo pro cliente semana que vem.'"
+    context: "Demo pro cliente piloto em 5 dias. A Camila ta ansiosa. 'Se essa demo for bem, fechamos contrato de 1 ano.' Pressão total."
+    steps:
+      - "Configurar cliente Socket.io no React"
+      - "Implementar tela de login"
+      - "Implementar lista de salas com badge de não lidas"
+      - "Implementar tela de chat com mensagens em real-time"
+      - "Implementar indicador de digitacao"
+      - "Testar fluxo completo end-to-end"
+    successCriteria:
+      - "Login funcionando"
+      - "Chat em tempo real funcionando"
+      - "Indicadores de presença e digitação"
+      - "Demo pronta pro cliente"

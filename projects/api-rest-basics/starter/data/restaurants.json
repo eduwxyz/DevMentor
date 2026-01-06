@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "name": "Pizza do Mario",
+    "category": "pizza",
+    "rating": 4.5,
+    "deliveryTime": "30-45 min",
+    "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38",
+    "address": "Rua das Pizzas, 123 - Centro",
+    "phone": "(11) 99999-1234"
+  },
+  {
+    "id": 2,
+    "name": "Sushi Samurai",
+    "category": "sushi",
+    "rating": 4.8,
+    "deliveryTime": "40-55 min",
+    "imageUrl": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c",
+    "address": "Av. Liberdade, 456 - Liberdade",
+    "phone": "(11) 99999-5678"
+  },
+  {
+    "id": 3,
+    "name": "Burger King da Esquina",
+    "category": "hamburguer",
+    "rating": 4.2,
+    "deliveryTime": "25-35 min",
+    "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+    "address": "Rua dos Burgers, 789 - Pinheiros",
+    "phone": "(11) 99999-9012"
+  },
+  {
+    "id": 4,
+    "name": "Taco Loco",
+    "category": "mexicano",
+    "rating": 4.3,
+    "deliveryTime": "35-50 min",
+    "imageUrl": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47",
+    "address": "Rua Mexico, 321 - Vila Madalena",
+    "phone": "(11) 99999-3456"
+  },
+  {
+    "id": 5,
+    "name": "China Box",
+    "category": "chinesa",
+    "rating": 4.1,
+    "deliveryTime": "30-40 min",
+    "imageUrl": "https://images.unsplash.com/photo-1585032226651-759b368d7246",
+    "address": "Rua China, 654 - Aclimacao",
+    "phone": "(11) 99999-7890"
+  },
+  {
+    "id": 6,
+    "name": "Pizzaria Napolitana",
+    "category": "pizza",
+    "rating": 4.7,
+    "deliveryTime": "35-50 min",
+    "imageUrl": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002",
+    "address": "Rua Italia, 987 - Bela Vista",
+    "phone": "(11) 99999-1111"
+  },
+  {
+    "id": 7,
+    "name": "Acai da Bahia",
+    "category": "saudavel",
+    "rating": 4.6,
+    "deliveryTime": "20-30 min",
+    "imageUrl": "https://images.unsplash.com/photo-1590301157890-4810ed352733",
+    "address": "Rua Bahia, 159 - Consolacao",
+    "phone": "(11) 99999-2222"
+  },
+  {
+    "id": 8,
+    "name": "Pastelaria do Ze",
+    "category": "brasileira",
+    "rating": 4.4,
+    "deliveryTime": "15-25 min",
+    "imageUrl": "https://images.unsplash.com/photo-1601314002592-b8734bca6604",
+    "address": "Rua Brasil, 753 - Se",
+    "phone": "(11) 99999-3333"
+  },
+  {
+    "id": 9,
+    "name": "Temaki House",
+    "category": "sushi",
+    "rating": 4.5,
+    "deliveryTime": "35-45 min",
+    "imageUrl": "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56",
+    "address": "Rua Japao, 246 - Liberdade",
+    "phone": "(11) 99999-4444"
+  },
+  {
+    "id": 10,
+    "name": "Smash Burger",
+    "category": "hamburguer",
+    "rating": 4.6,
+    "deliveryTime": "20-30 min",
+    "imageUrl": "https://images.unsplash.com/photo-1550317138-10000687a72b",
+    "address": "Rua Burger, 135 - Itaim",
+    "phone": "(11) 99999-5555"
+  },
+  {
+    "id": 11,
+    "name": "Wrap & Roll",
+    "category": "saudavel",
+    "rating": 4.3,
+    "deliveryTime": "25-35 min",
+    "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f",
+    "address": "Rua Fitness, 864 - Moema",
+    "phone": "(11) 99999-6666"
+  },
+  {
+    "id": 12,
+    "name": "Massas da Nonna",
+    "category": "italiana",
+    "rating": 4.7,
+    "deliveryTime": "40-55 min",
+    "imageUrl": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9",
+    "address": "Rua Italia, 951 - Mooca",
+    "phone": "(11) 99999-7777"
+  }
+]

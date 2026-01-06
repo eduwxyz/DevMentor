@@ -1,0 +1,346 @@
+{
+  "1": [
+    {
+      "id": 1,
+      "name": "Pizza Margherita",
+      "description": "Molho de tomate, mussarela fresca e manjericao",
+      "price": 45.90,
+      "category": "pizzas",
+      "imageUrl": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002"
+    },
+    {
+      "id": 2,
+      "name": "Pizza Calabresa",
+      "description": "Molho de tomate, mussarela e calabresa fatiada",
+      "price": 48.90,
+      "category": "pizzas",
+      "imageUrl": "https://images.unsplash.com/photo-1628840042765-356cda07504e"
+    },
+    {
+      "id": 3,
+      "name": "Pizza Quatro Queijos",
+      "description": "Mussarela, parmesao, gorgonzola e catupiry",
+      "price": 52.90,
+      "category": "pizzas",
+      "imageUrl": "https://images.unsplash.com/photo-1513104890138-7c749659a591"
+    },
+    {
+      "id": 4,
+      "name": "Refrigerante Lata",
+      "description": "Coca-Cola, Guarana ou Sprite",
+      "price": 6.00,
+      "category": "bebidas",
+      "imageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e"
+    }
+  ],
+  "2": [
+    {
+      "id": 5,
+      "name": "Combo Sushi 20 pecas",
+      "description": "10 hossomakis, 5 uramakis e 5 niguiris",
+      "price": 89.90,
+      "category": "combos",
+      "imageUrl": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c"
+    },
+    {
+      "id": 6,
+      "name": "Temaki Salmao",
+      "description": "Temaki de salmao com cream cheese e cebolinha",
+      "price": 28.90,
+      "category": "temakis",
+      "imageUrl": "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56"
+    },
+    {
+      "id": 7,
+      "name": "Hot Roll",
+      "description": "8 pecas empanadas com salmao e cream cheese",
+      "price": 32.90,
+      "category": "especiais",
+      "imageUrl": "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351"
+    },
+    {
+      "id": 8,
+      "name": "Missoshiru",
+      "description": "Sopa tradicional japonesa com tofu",
+      "price": 12.90,
+      "category": "acompanhamentos",
+      "imageUrl": "https://images.unsplash.com/photo-1607301405390-d831c242f59b"
+    }
+  ],
+  "3": [
+    {
+      "id": 9,
+      "name": "Classic Burger",
+      "description": "Pao brioche, burger 180g, queijo, alface, tomate e molho especial",
+      "price": 32.90,
+      "category": "burgers",
+      "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd"
+    },
+    {
+      "id": 10,
+      "name": "Bacon Lover",
+      "description": "Pao brioche, burger 180g, muito bacon, queijo cheddar e BBQ",
+      "price": 38.90,
+      "category": "burgers",
+      "imageUrl": "https://images.unsplash.com/photo-1553979459-d2229ba7433b"
+    },
+    {
+      "id": 11,
+      "name": "Batata Frita P",
+      "description": "Porcao pequena de batata frita crocante",
+      "price": 12.90,
+      "category": "acompanhamentos",
+      "imageUrl": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877"
+    },
+    {
+      "id": 12,
+      "name": "Onion Rings",
+      "description": "Aneis de cebola empanados",
+      "price": 18.90,
+      "category": "acompanhamentos",
+      "imageUrl": "https://images.unsplash.com/photo-1639024471283-03518883512d"
+    }
+  ],
+  "4": [
+    {
+      "id": 13,
+      "name": "Tacos de Carne",
+      "description": "3 tacos com carne moida temperada, queijo, alface e pico de gallo",
+      "price": 34.90,
+      "category": "tacos",
+      "imageUrl": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47"
+    },
+    {
+      "id": 14,
+      "name": "Burrito de Frango",
+      "description": "Tortilla grande com frango desfiado, arroz, feijao e guacamole",
+      "price": 38.90,
+      "category": "burritos",
+      "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f"
+    },
+    {
+      "id": 15,
+      "name": "Nachos Supreme",
+      "description": "Nachos com carne, queijo derretido, sour cream e jalapenos",
+      "price": 42.90,
+      "category": "aperitivos",
+      "imageUrl": "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d"
+    }
+  ],
+  "5": [
+    {
+      "id": 16,
+      "name": "Yakisoba Tradicional",
+      "description": "Macarrao oriental com legumes, frango e molho shoyu",
+      "price": 36.90,
+      "category": "pratos",
+      "imageUrl": "https://images.unsplash.com/photo-1585032226651-759b368d7246"
+    },
+    {
+      "id": 17,
+      "name": "Frango Xadrez",
+      "description": "Cubos de frango com legumes e amendoim",
+      "price": 42.90,
+      "category": "pratos",
+      "imageUrl": "https://images.unsplash.com/photo-1525755662778-989d0524087e"
+    },
+    {
+      "id": 18,
+      "name": "Rolinho Primavera",
+      "description": "4 rolinhos crocantes com legumes",
+      "price": 22.90,
+      "category": "entradas",
+      "imageUrl": "https://images.unsplash.com/photo-1606525437679-037aca74a3c9"
+    }
+  ],
+  "6": [
+    {
+      "id": 19,
+      "name": "Pizza Pepperoni",
+      "description": "Molho de tomate, mussarela e pepperoni importado",
+      "price": 54.90,
+      "category": "pizzas",
+      "imageUrl": "https://images.unsplash.com/photo-1628840042765-356cda07504e"
+    },
+    {
+      "id": 20,
+      "name": "Pizza Portuguesa",
+      "description": "Presunto, ovos, cebola, azeitona e pimentao",
+      "price": 49.90,
+      "category": "pizzas",
+      "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38"
+    },
+    {
+      "id": 21,
+      "name": "Pizza Frango com Catupiry",
+      "description": "Frango desfiado, catupiry e milho",
+      "price": 51.90,
+      "category": "pizzas",
+      "imageUrl": "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e"
+    }
+  ],
+  "7": [
+    {
+      "id": 22,
+      "name": "Acai 500ml",
+      "description": "Acai puro com granola, banana e leite condensado",
+      "price": 24.90,
+      "category": "acai",
+      "imageUrl": "https://images.unsplash.com/photo-1590301157890-4810ed352733"
+    },
+    {
+      "id": 23,
+      "name": "Acai 700ml",
+      "description": "Acai puro com granola, banana, morango e leite em po",
+      "price": 32.90,
+      "category": "acai",
+      "imageUrl": "https://images.unsplash.com/photo-1590301157890-4810ed352733"
+    },
+    {
+      "id": 24,
+      "name": "Bowl de Frutas",
+      "description": "Mix de frutas da estacao com iogurte e granola",
+      "price": 28.90,
+      "category": "bowls",
+      "imageUrl": "https://images.unsplash.com/photo-1590301157890-4810ed352733"
+    }
+  ],
+  "8": [
+    {
+      "id": 25,
+      "name": "Pastel de Carne",
+      "description": "Pastel gigante recheado com carne moida",
+      "price": 12.90,
+      "category": "pasteis",
+      "imageUrl": "https://images.unsplash.com/photo-1601314002592-b8734bca6604"
+    },
+    {
+      "id": 26,
+      "name": "Pastel de Queijo",
+      "description": "Pastel gigante recheado com queijo mussarela",
+      "price": 11.90,
+      "category": "pasteis",
+      "imageUrl": "https://images.unsplash.com/photo-1601314002592-b8734bca6604"
+    },
+    {
+      "id": 27,
+      "name": "Pastel de Frango",
+      "description": "Pastel gigante com frango desfiado e catupiry",
+      "price": 13.90,
+      "category": "pasteis",
+      "imageUrl": "https://images.unsplash.com/photo-1601314002592-b8734bca6604"
+    },
+    {
+      "id": 28,
+      "name": "Caldo de Cana",
+      "description": "Copo 500ml de caldo de cana gelado",
+      "price": 8.90,
+      "category": "bebidas",
+      "imageUrl": "https://images.unsplash.com/photo-1622597467836-f3285f2131b8"
+    }
+  ],
+  "9": [
+    {
+      "id": 29,
+      "name": "Temaki Salmao Grelhado",
+      "description": "Temaki com salmao grelhado, cream cheese e cebolinha",
+      "price": 32.90,
+      "category": "temakis",
+      "imageUrl": "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56"
+    },
+    {
+      "id": 30,
+      "name": "Temaki Atum",
+      "description": "Temaki de atum fresco com pepino",
+      "price": 29.90,
+      "category": "temakis",
+      "imageUrl": "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56"
+    },
+    {
+      "id": 31,
+      "name": "Combo Temaki Duplo",
+      "description": "2 temakis a sua escolha",
+      "price": 54.90,
+      "category": "combos",
+      "imageUrl": "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56"
+    }
+  ],
+  "10": [
+    {
+      "id": 32,
+      "name": "Smash Burger Simples",
+      "description": "Pao, smash burger 90g, queijo americano e molho",
+      "price": 24.90,
+      "category": "burgers",
+      "imageUrl": "https://images.unsplash.com/photo-1550317138-10000687a72b"
+    },
+    {
+      "id": 33,
+      "name": "Smash Burger Duplo",
+      "description": "Pao, 2 smash burgers 90g, queijo americano duplo e molho",
+      "price": 34.90,
+      "category": "burgers",
+      "imageUrl": "https://images.unsplash.com/photo-1550317138-10000687a72b"
+    },
+    {
+      "id": 34,
+      "name": "Milkshake",
+      "description": "Milkshake cremoso - chocolate, morango ou baunilha",
+      "price": 18.90,
+      "category": "bebidas",
+      "imageUrl": "https://images.unsplash.com/photo-1572490122747-3968b75cc699"
+    }
+  ],
+  "11": [
+    {
+      "id": 35,
+      "name": "Wrap de Frango Grelhado",
+      "description": "Tortilla com frango grelhado, alface, tomate e molho caesar",
+      "price": 28.90,
+      "category": "wraps",
+      "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f"
+    },
+    {
+      "id": 36,
+      "name": "Salada Caesar",
+      "description": "Alface americana, croutons, parmesao e molho caesar",
+      "price": 32.90,
+      "category": "saladas",
+      "imageUrl": "https://images.unsplash.com/photo-1546793665-c74683f339c1"
+    },
+    {
+      "id": 37,
+      "name": "Suco Detox",
+      "description": "Couve, maca verde, gengibre e limao",
+      "price": 14.90,
+      "category": "bebidas",
+      "imageUrl": "https://images.unsplash.com/photo-1610970881699-44a5587cabec"
+    }
+  ],
+  "12": [
+    {
+      "id": 38,
+      "name": "Spaghetti Carbonara",
+      "description": "Massa al dente com molho cremoso, bacon e parmesao",
+      "price": 46.90,
+      "category": "massas",
+      "imageUrl": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9"
+    },
+    {
+      "id": 39,
+      "name": "Lasanha Bolonhesa",
+      "description": "Camadas de massa, ragu de carne e bechamel",
+      "price": 52.90,
+      "category": "massas",
+      "imageUrl": "https://images.unsplash.com/photo-1574894709920-11b28e7367e3"
+    },
+    {
+      "id": 40,
+      "name": "Penne ao Pesto",
+      "description": "Penne com molho pesto de manjericao e parmesao",
+      "price": 44.90,
+      "category": "massas",
+      "imageUrl": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9"
+    }
+  ]
+}
