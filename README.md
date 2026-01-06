@@ -70,8 +70,8 @@ Sua missão: criar os dashboards que vão guiar as decisões da empresa.
 
 ```bash
 # 1. Clone e instale
-git clone https://github.com/seu-usuario/devmentor.git
-cd devmentor && npm install
+git clone https://github.com/eduwxyz/DevMentor.git
+cd DevMentor && npm install
 
 # 2. Instale o Gemini CLI (necessário pro Tech Lead funcionar)
 npm install -g @google/generative-ai-cli
