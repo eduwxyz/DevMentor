@@ -1,0 +1,158 @@
+id: customer-360
+title: "Customer 360 na DataCo"
+description: "Você entrou como Analytics Engineer na DataCo, uma empresa de e-commerce que cresceu rápido mas tem dados espalhados em 5 sistemas diferentes. Ninguém consegue responder perguntas simples como 'quantos clientes ativos temos?' Sua missão: construir uma visão unificada do cliente (Customer 360) que permita ao time de negócios tomar decisões baseadas em dados."
+category: analytics-engineer
+stack:
+  - Python
+  - SQL
+  - dbt
+  - BigQuery
+  - Looker
+difficulty: intermediate
+estimatedHours: 12
+totalTasks: 8
+
+context:
+  company: "DataCo"
+  role: "Analytics Engineer"
+  team:
+    - name: "Fernando"
+      role: "Head of Data"
+      description: "Seu gestor. Quer estruturar o time de analytics e precisa de quick wins pra mostrar valor."
+    - name: "Juliana"
+      role: "Head of CRM"
+      description: "Sua principal stakeholder. Precisa segmentar clientes pra campanhas mas não confia nos dados atuais."
+    - name: "André"
+      role: "CFO"
+      description: "Quer entender unit economics: CAC, LTV, payback. Hoje ninguém sabe calcular direito."
+  situation: "A DataCo tem dados em 5 lugares: Shopify (vendas), Klaviyo (email), Zendesk (suporte), Google Analytics (web), e um CRM legado. Cada sistema tem seu próprio 'customer_id'. O time de marketing manda email pra clientes que já cancelaram. O financeiro calcula LTV de 3 formas diferentes. O André tá puto. Você foi contratado pra resolver esse caos."
+
+tasks:
+  - id: 1
+    title: "Mapeando o ecossistema de dados"
+    description: "Primeiro dia! O Fernando te passou acesso aos sistemas: 'Antes de integrar qualquer coisa, precisa entender o que temos. Mapeia as fontes, os campos, as chaves. Documenta tudo.' Hora de fazer um data discovery."
+    context: "Onboarding. Fernando: 'Já tentaram fazer isso antes e falhou. Dessa vez quero documentação primeiro, código depois.'"
+    steps:
+      - "Explorar schema de cada fonte (Shopify, Klaviyo, Zendesk, GA, CRM)"
+      - "Identificar campos de identificação do cliente em cada sistema"
+      - "Mapear campos comuns (email, telefone, nome)"
+      - "Documentar volumetria e freshness de cada fonte"
+      - "Criar diagrama do ecossistema de dados"
+    successCriteria:
+      - "Todas as fontes mapeadas"
+      - "Campos de identificação documentados"
+      - "Diagrama do ecossistema criado"
+
+  - id: 2
+    title: "Identity Resolution: Unificando clientes"
+    description: "A Juliana mandou mensagem: 'Temos 500k registros no CRM, 300k no Shopify, 200k no Klaviyo. Quantos clientes únicos são?' O Fernando explicou: 'Isso é identity resolution - o coração do Customer 360.'"
+    context: "O desafio: mesmo cliente pode ter emails diferentes, telefones diferentes. João Silva no CRM pode ser J. Silva no Shopify. Precisa de lógica de matching."
+    steps:
+      - "Definir estratégia de matching (determinístico vs probabilístico)"
+      - "Criar lógica de match por email (primary key)"
+      - "Criar lógica de match por telefone (secondary)"
+      - "Tratar edge cases (emails corporativos, telefones compartilhados)"
+      - "Criar tabela dim_customer com ID único"
+      - "Calcular taxa de match entre sistemas"
+    successCriteria:
+      - "Lógica de identity resolution implementada"
+      - "dim_customer criada com ID único"
+      - "Taxa de match documentada"
+
+  - id: 3
+    title: "Modelagem dimensional: Fatos e dimensões"
+    description: "O Fernando quer estrutura: 'Agora que temos o cliente unificado, precisa modelar os dados direito. Star schema clássico: fatos de transação, dimensões de cliente, produto, tempo. Usa dbt pra versionar.'"
+    context: "Workshop de modelagem. Fernando desenhou: fct_orders, fct_support_tickets, dim_customer, dim_product, dim_date. 'Isso vai ser a fundação de tudo.'"
+    steps:
+      - "Configurar projeto dbt"
+      - "Criar dim_customer com atributos unificados"
+      - "Criar dim_product com hierarquia de categorias"
+      - "Criar fct_orders com métricas de venda"
+      - "Criar fct_support_tickets com métricas de suporte"
+      - "Implementar testes de qualidade no dbt"
+    successCriteria:
+      - "Projeto dbt configurado"
+      - "Dimensões e fatos criados"
+      - "Testes de qualidade passando"
+
+  - id: 4
+    title: "Métricas de cliente: RFM e Segmentação"
+    description: "A Juliana precisa segmentar: 'Quero saber quem são meus melhores clientes, quem tá em risco de churnar, quem nunca mais comprou. Me dá segmentos acionáveis.' Hora de criar métricas de cliente."
+    context: "Reunião com CRM. Juliana: 'Hoje mando a mesma campanha pra todo mundo. Preciso personalizar.'"
+    steps:
+      - "Calcular Recency (dias desde última compra)"
+      - "Calcular Frequency (número de pedidos)"
+      - "Calcular Monetary (valor total gasto)"
+      - "Criar scores RFM (1-5 pra cada dimensão)"
+      - "Definir segmentos: Champions, Loyal, At Risk, Lost, etc"
+      - "Criar tabela customer_segments no dbt"
+    successCriteria:
+      - "Métricas RFM calculadas"
+      - "Segmentos definidos e documentados"
+      - "Tabela de segmentos criada"
+
+  - id: 5
+    title: "Unit Economics: LTV, CAC, Payback"
+    description: "O André marcou reunião: 'Preciso apresentar pro board nossos unit economics. LTV, CAC, payback period. E preciso confiar nesses números - nada de Excel com fórmula errada.' Hora de calcular as métricas que importam."
+    context: "Financeiro. André: 'Se o LTV/CAC for menor que 3, temos problema. Mas primeiro preciso saber qual é.'"
+    steps:
+      - "Calcular CAC por canal (marketing spend / new customers)"
+      - "Calcular LTV histórico (revenue por cohort ao longo do tempo)"
+      - "Calcular LTV preditivo (baseado em retention curves)"
+      - "Calcular Payback Period (meses pra recuperar CAC)"
+      - "Criar dashboard com unit economics"
+      - "Documentar metodologia de cálculo"
+    successCriteria:
+      - "CAC calculado por canal"
+      - "LTV calculado (histórico e preditivo)"
+      - "Payback period calculado"
+      - "Metodologia documentada"
+
+  - id: 6
+    title: "Customer Health Score"
+    description: "A Juliana quer prever churn: 'Além dos segmentos, quero um score de saúde do cliente. Tipo: esse cliente tá feliz ou vai cancelar? Assim posso agir antes.' O Fernando sugeriu criar um health score composto."
+    context: "Proatividade. Juliana: 'Melhor prevenir churn do que tentar recuperar cliente perdido.'"
+    steps:
+      - "Definir indicadores de saúde (recência, frequência, tickets, NPS)"
+      - "Normalizar cada indicador (0-100)"
+      - "Definir pesos pra cada indicador"
+      - "Calcular health score composto"
+      - "Criar alertas pra clientes em risco (score < 40)"
+      - "Validar score com dados históricos de churn"
+    successCriteria:
+      - "Health score calculado"
+      - "Indicadores documentados com pesos"
+      - "Alertas configurados"
+
+  - id: 7
+    title: "Dashboard Customer 360"
+    description: "O Fernando quer mostrar valor: 'Precisa de um dashboard que mostre a visão 360 do cliente. Quando a Juliana clicar num cliente, vê tudo: compras, tickets, campanhas, health score. Isso vai ser o showcase do projeto.'"
+    context: "Entrega visual. Fernando: 'Dados sem visualização não geram ação. Constrói algo que impressione.'"
+    steps:
+      - "Criar página de overview (KPIs gerais, distribuição de segmentos)"
+      - "Criar página de busca de cliente (pesquisa por email/nome)"
+      - "Criar perfil do cliente (timeline de interações)"
+      - "Adicionar filtros por segmento, período, canal"
+      - "Criar página de cohort analysis"
+      - "Configurar refresh automático"
+    successCriteria:
+      - "Dashboard com visão geral"
+      - "Perfil individual do cliente"
+      - "Filtros funcionando"
+
+  - id: 8
+    title: "Documentação e entrega"
+    description: "O Fernando quer institucionalizar: 'Projeto tá ótimo, mas precisa documentar. Data dictionary, linhagem, SLAs. Se você sair amanhã, outra pessoa precisa conseguir manter.' Hora de documentar tudo."
+    context: "Sustentabilidade. Fernando: 'Projeto sem documentação é dívida técnica. Documenta agora enquanto tá fresco.'"
+    steps:
+      - "Criar data dictionary (todas as tabelas e campos)"
+      - "Documentar linhagem de dados (de onde vem cada campo)"
+      - "Definir SLAs de freshness (dados atualizados até que hora)"
+      - "Criar runbook de manutenção (o que fazer se quebrar)"
+      - "Apresentar projeto pros stakeholders"
+      - "Coletar feedback e próximos passos"
+    successCriteria:
+      - "Data dictionary completo"
+      - "Linhagem documentada"
+      - "SLAs definidos"
+      - "Apresentação realizada"

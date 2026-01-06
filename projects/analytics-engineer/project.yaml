@@ -1,0 +1,149 @@
+id: analytics-engineer
+title: "Analytics na MétricasPro"
+description: "Você entrou como Analytics Engineer na MétricasPro, uma startup de SaaS B2B que vende uma plataforma de gestão de projetos. O time de produto está perdido sem dados, e o investidor quer ver métricas de retenção. Sua missão é criar os dashboards e análises que vão guiar as decisões da empresa."
+category: analytics-engineer
+stack:
+  - Python
+  - SQL
+  - Pandas
+  - Metabase
+difficulty: intermediate
+estimatedHours: 10
+totalTasks: 8
+
+context:
+  company: "MétricasPro"
+  role: "Analytics Engineer"
+  team:
+    - name: "Thiago"
+      role: "Head of Product"
+      description: "Seu principal stakeholder. Precisa de dados pra priorizar o roadmap e provar valor pro investidor."
+    - name: "Beatriz"
+      role: "Data Lead"
+      description: "Sua mentora. Experiente em product analytics, vai te ajudar com metodologias e boas práticas."
+    - name: "Ricardo"
+      role: "CEO/Founder"
+      description: "Fundou a empresa. Tem reunião com investidor em 3 semanas e precisa de métricas sólidas."
+  situation: "A MétricasPro levantou uma Series A há 6 meses e agora o investidor quer ver métricas de produto. O problema: ninguém sabe calcular churn, MRR, ou retenção direito. O Thiago tá tomando decisões no feeling. O Ricardo tá desesperado. Você foi contratado pra resolver esse caos."
+
+tasks:
+  - id: 1
+    title: "Primeiro dia: Entendendo os dados"
+    description: "Bem-vindo à MétricasPro! A Beatriz separou os dados de produto pra você explorar. Antes de criar qualquer dashboard, você precisa entender o que tem disponível e a qualidade dos dados."
+    context: "Onboarding com a Beatriz. Ela explicou que os dados vêm de 3 fontes: banco do app (eventos), Stripe (pagamentos), e HubSpot (vendas). Tudo foi consolidado num Data Warehouse."
+    steps:
+      - "Configurar ambiente Python (venv, pandas, sqlalchemy)"
+      - "Conectar ao banco de dados usando as credenciais do .env"
+      - "Explorar as tabelas disponíveis (events, users, subscriptions, payments)"
+      - "Documentar: quantos registros, período dos dados, campos principais"
+      - "Identificar possíveis problemas de qualidade"
+    successCriteria:
+      - "Ambiente configurado e conectado ao banco"
+      - "Relatório de exploração com principais descobertas"
+      - "Lista de problemas de qualidade identificados"
+
+  - id: 2
+    title: "Métricas de aquisição: Funil de signup"
+    description: "O Thiago mandou mensagem: 'Preciso saber como tá nosso funil de aquisição. Quantas pessoas visitam o site, quantas fazem signup, quantas ativam, quantas pagam?' A Beatriz disse que isso é prioridade."
+    context: "Reunião de produto. O Thiago mostrou que gastam R$50k/mês em marketing mas não sabem o CAC nem a conversão do funil."
+    steps:
+      - "Mapear os eventos do funil: page_view -> signup -> activation -> subscription"
+      - "Calcular conversão entre cada etapa"
+      - "Segmentar por canal de aquisição (organic, paid, referral)"
+      - "Criar visualização do funil com taxas de conversão"
+      - "Identificar onde está o maior gargalo"
+    successCriteria:
+      - "Funil mapeado com todas as etapas"
+      - "Taxas de conversão calculadas por etapa"
+      - "Análise de gargalos documentada"
+
+  - id: 3
+    title: "Retenção de usuários: Cohort Analysis"
+    description: "O Ricardo entrou na daily: 'O investidor quer ver nossa retenção. Disse que sem isso não tem conversa sobre Series B.' A Beatriz explicou que você precisa criar uma análise de cohort - agrupar usuários por mês de signup e ver quantos voltam."
+    context: "O Ricardo explicou que o investidor é obcecado por retenção. 'Se a retenção for boa, o resto a gente resolve.' Beatriz disse que precisa de uma matriz de cohort clássica."
+    steps:
+      - "Definir o que significa 'retenção' pro produto (login? uso de feature?)"
+      - "Criar cohorts mensais baseados na data de signup"
+      - "Calcular retenção para cada cohort nos meses seguintes"
+      - "Criar matriz de cohort (linhas: cohort, colunas: mês relativo)"
+      - "Visualizar como heatmap"
+    successCriteria:
+      - "Matriz de cohort com pelo menos 6 meses de dados"
+      - "Retenção calculada corretamente (M0, M1, M2...)"
+      - "Heatmap visualizando a retenção"
+
+  - id: 4
+    title: "Métricas financeiras: MRR e Churn"
+    description: "A Beatriz marcou uma sessão sobre métricas de SaaS: 'MRR é a métrica mais importante pra uma SaaS. Você precisa calcular MRR, New MRR, Expansion, Contraction, e Churn. O Ricardo precisa disso pro investidor.'"
+    context: "Workshop de métricas SaaS. Beatriz desenhou no quadro: MRR = New + Expansion - Contraction - Churn. Explicou que cada componente conta uma história diferente."
+    steps:
+      - "Calcular MRR total por mês (soma de todas assinaturas ativas)"
+      - "Decompor em: New MRR, Expansion MRR, Contraction MRR, Churned MRR"
+      - "Calcular Net Revenue Retention (NRR)"
+      - "Calcular Gross Revenue Churn e Logo Churn"
+      - "Criar gráfico de evolução do MRR com componentes"
+    successCriteria:
+      - "MRR calculado corretamente por mês"
+      - "Decomposição em componentes funcionando"
+      - "NRR e Churn rates calculados"
+
+  - id: 5
+    title: "Segmentação de clientes: RFM Analysis"
+    description: "O Thiago quer entender melhor os clientes: 'Quem são nossos melhores clientes? Quem tá prestes a churnar? Quem a gente deveria focar?' A Beatriz sugeriu uma análise RFM - Recency, Frequency, Monetary."
+    context: "Reunião de produto. Thiago explicou que o time de CS não sabe priorizar contas. Atendem todo mundo igual. Uma segmentação ajudaria muito."
+    steps:
+      - "Calcular Recency: dias desde o último uso/pagamento"
+      - "Calcular Frequency: quantas vezes usou no período"
+      - "Calcular Monetary: quanto pagou no total"
+      - "Criar scores (1-5) pra cada dimensão"
+      - "Segmentar: Champions, Loyal, At Risk, Lost, etc."
+      - "Criar distribuição dos clientes por segmento"
+    successCriteria:
+      - "RFM scores calculados pra cada cliente"
+      - "Segmentos definidos e documentados"
+      - "Distribuição de clientes por segmento"
+
+  - id: 6
+    title: "Product Analytics: Feature adoption"
+    description: "O Thiago precisa priorizar o roadmap: 'Quais features as pessoas mais usam? Quais ninguém usa? Tem correlação entre usar certas features e reter melhor?' A Beatriz disse que é hora de mergulhar nos dados de produto."
+    context: "Planning de sprint. Thiago tem 10 features no backlog mas só consegue fazer 2. Precisa de dados pra decidir onde investir."
+    steps:
+      - "Mapear as principais features do produto nos eventos"
+      - "Calcular adoption rate de cada feature (% users que usam)"
+      - "Calcular frequência de uso por feature"
+      - "Correlacionar uso de features com retenção"
+      - "Identificar 'aha moments' - ações que predizem retenção"
+    successCriteria:
+      - "Adoption rate calculado por feature"
+      - "Correlação feature vs retenção analisada"
+      - "Top 3 features que mais impactam retenção"
+
+  - id: 7
+    title: "Dashboard executivo"
+    description: "O Ricardo marcou: 'Preciso de um dashboard que eu possa mostrar pro investidor. As métricas principais num lugar só, atualizado automaticamente. Nada de ficar pedindo relatório toda semana.'"
+    context: "Reunião com o Ricardo. Ele quer um dashboard no Metabase que mostre: MRR, Churn, Retenção, Funil, e tendências. Algo visual e fácil de entender."
+    steps:
+      - "Definir as métricas do dashboard com o Ricardo"
+      - "Criar queries SQL otimizadas pra cada métrica"
+      - "Montar o dashboard no Metabase (ou ferramenta similar)"
+      - "Adicionar filtros por período e segmento"
+      - "Configurar refresh automático"
+    successCriteria:
+      - "Dashboard com todas as métricas principais"
+      - "Visualizações claras e profissionais"
+      - "Filtros funcionando"
+
+  - id: 8
+    title: "Apresentação pro investidor"
+    description: "Última task! O Ricardo pediu pra você preparar os slides com as principais descobertas: 'Preciso contar a história dos dados. O que aprendemos, onde estamos, pra onde vamos. O investidor quer ver que a gente entende nossos números.'"
+    context: "A reunião com o investidor é em 3 dias. Ricardo quer um deck de 10 slides máximo com as principais métricas e insights. 'Menos é mais. Só o que importa.'"
+    steps:
+      - "Resumir as principais métricas (MRR, Churn, Retenção, NRR)"
+      - "Destacar pontos positivos (o que tá funcionando)"
+      - "Identificar áreas de melhoria com plano de ação"
+      - "Criar narrativa: onde estamos, desafios, oportunidades"
+      - "Preparar respostas pra perguntas difíceis"
+    successCriteria:
+      - "Deck com métricas principais"
+      - "Narrativa clara e convincente"
+      - "Insights acionáveis documentados"

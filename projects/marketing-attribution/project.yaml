@@ -1,0 +1,156 @@
+id: marketing-attribution
+title: "Marketing Attribution na GrowthHub"
+description: "Você entrou como Analytics Engineer na GrowthHub, uma agência de growth que gerencia R$5M/mês em mídia paga pra diversos clientes. O problema: ninguém sabe qual canal realmente traz conversão. O Google diz uma coisa, o Facebook outra, o cliente reclama. Sua missão: construir um modelo de atribuição que finalmente responda 'onde devo investir meu budget?'"
+category: analytics-engineer
+stack:
+  - Python
+  - SQL
+  - BigQuery
+  - Pandas
+  - Streamlit
+difficulty: intermediate
+estimatedHours: 10
+totalTasks: 8
+
+context:
+  company: "GrowthHub"
+  role: "Analytics Engineer"
+  team:
+    - name: "Patrícia"
+      role: "Head of Analytics"
+      description: "Sua gestora. Ex-Google, obcecada por atribuição. Vai te ensinar os modelos."
+    - name: "Marcos"
+      role: "Media Buyer Lead"
+      description: "Gerencia os R$5M/mês. Precisa saber onde alocar budget mas não confia nos reports."
+    - name: "Cliente: FitLife"
+      role: "E-commerce de suplementos"
+      description: "Gasta R$500k/mês em ads. CEO frustrado porque não sabe o ROI real de cada canal."
+  situation: "A FitLife anuncia em Google, Facebook, Instagram, TikTok, e influenciadores. Cada plataforma se dá crédito pela conversão. Somando tudo, dá 150% das vendas. O CEO quer cortar budget mas não sabe de onde. A Patrícia disse: 'Atribuição é o problema mais difícil de marketing analytics. Vamos resolver.'"
+
+tasks:
+  - id: 1
+    title: "Entendendo o problema de atribuição"
+    description: "Primeiro dia! A Patrícia marcou uma sessão: 'Antes de modelar, precisa entender o problema. O que é atribuição? Por que é tão difícil? Quais os modelos existentes?' Onboarding intensivo."
+    context: "Fundamentos. Patrícia: 'Atribuição parece simples mas é um dos problemas mais complexos de analytics. Vamos do básico.'"
+    steps:
+      - "Entender a jornada do cliente (touchpoints múltiplos)"
+      - "Estudar modelos de atribuição: last-click, first-click, linear, time-decay, position-based"
+      - "Entender por que plataformas reportam números diferentes"
+      - "Estudar o conceito de incrementalidade"
+      - "Documentar pros e contras de cada modelo"
+    successCriteria:
+      - "Modelos de atribuição documentados"
+      - "Entende diferença entre atribuição e incrementalidade"
+      - "Pros e contras mapeados"
+
+  - id: 2
+    title: "Mapeando a jornada do cliente"
+    description: "A Patrícia passou os dados: 'Temos tracking de todas as sessões, cliques em ads, e conversões. Primeiro, mapeia a jornada típica. Quantos touchpoints antes de converter? Quais canais aparecem mais?' Dados em data/fitlife/."
+    context: "Data exploration. Patrícia: 'A jornada média da FitLife tem 4-5 touchpoints. Isso significa que last-click tá muito errado.'"
+    steps:
+      - "Carregar dados de sessões, clicks, e conversões"
+      - "Construir jornadas (sequência de touchpoints por usuário)"
+      - "Calcular número médio de touchpoints até conversão"
+      - "Identificar canais mais frequentes em cada posição da jornada"
+      - "Visualizar jornadas típicas (sankey diagram)"
+      - "Documentar padrões encontrados"
+    successCriteria:
+      - "Jornadas construídas"
+      - "Métricas de touchpoints calculadas"
+      - "Padrões documentados"
+
+  - id: 3
+    title: "Implementando modelos de atribuição"
+    description: "O Marcos quer comparar: 'Me mostra como cada modelo distribui o crédito. Quero ver last-click vs first-click vs linear. Assim entendo o viés de cada um.' Hora de implementar."
+    context: "Implementação. Patrícia: 'Começa pelos modelos rule-based. São simples mas já mostram como os números mudam.'"
+    steps:
+      - "Implementar Last-Click Attribution"
+      - "Implementar First-Click Attribution"
+      - "Implementar Linear Attribution"
+      - "Implementar Time-Decay Attribution"
+      - "Implementar Position-Based (U-shaped)"
+      - "Comparar resultados: quanto cada canal recebe em cada modelo"
+    successCriteria:
+      - "5 modelos implementados"
+      - "Comparativo de resultados"
+      - "Diferenças documentadas"
+
+  - id: 4
+    title: "Data-Driven Attribution com Markov Chains"
+    description: "A Patrícia quer ir além: 'Modelos rule-based são arbitrários. Markov Chains usam os dados pra calcular a probabilidade de cada canal contribuir pra conversão. É mais justo.' Hora de implementar algo mais sofisticado."
+    context: "Modelagem avançada. Patrícia: 'Google usa Markov Chains internamente. Vamos fazer o nosso.'"
+    steps:
+      - "Entender Markov Chains aplicado a atribuição"
+      - "Construir matriz de transição entre canais"
+      - "Calcular probabilidade de conversão de cada caminho"
+      - "Calcular Removal Effect de cada canal"
+      - "Distribuir crédito baseado no Removal Effect"
+      - "Comparar com modelos rule-based"
+    successCriteria:
+      - "Markov Chain implementado"
+      - "Removal Effect calculado por canal"
+      - "Comparativo com outros modelos"
+
+  - id: 5
+    title: "Shapley Value Attribution"
+    description: "A Patrícia quer mais uma abordagem: 'Shapley Value vem da teoria dos jogos. Calcula a contribuição marginal de cada canal considerando todas as combinações possíveis. É o método mais justo teoricamente.' Último modelo."
+    context: "Game theory. Patrícia: 'Shapley é computacionalmente caro, mas pra poucos canais funciona bem.'"
+    steps:
+      - "Entender conceito de Shapley Value"
+      - "Implementar cálculo de Shapley pra atribuição"
+      - "Calcular contribuição de cada canal"
+      - "Comparar com Markov Chains"
+      - "Analisar quando usar cada abordagem"
+      - "Documentar trade-offs"
+    successCriteria:
+      - "Shapley Value implementado"
+      - "Contribuições calculadas"
+      - "Comparativo com outros modelos"
+
+  - id: 6
+    title: "ROI por canal e otimização de budget"
+    description: "O Marcos quer ação: 'Legal os modelos, mas o que eu FAÇO com isso? Quanto tô tendo de ROI em cada canal? Onde devo aumentar ou diminuir budget?' Hora de traduzir em recomendações."
+    context: "Business impact. Marcos: 'Me dá um número: se eu tirar R$50k do Facebook e colocar no Google, o que acontece?'"
+    steps:
+      - "Calcular conversões atribuídas por canal (modelo escolhido)"
+      - "Calcular revenue atribuído por canal"
+      - "Calcular spend por canal"
+      - "Calcular ROI e ROAS por canal"
+      - "Identificar canais sub e sobre-investidos"
+      - "Simular realocação de budget"
+    successCriteria:
+      - "ROI por canal calculado"
+      - "Canais sub/sobre-investidos identificados"
+      - "Simulação de realocação"
+
+  - id: 7
+    title: "Dashboard de atribuição"
+    description: "O Marcos quer self-service: 'Não quero pedir relatório toda semana. Quero um dashboard onde eu veja atribuição por canal, por campanha, por período. E que eu possa trocar o modelo pra comparar.' Hora de construir."
+    context: "Produto de dados. Patrícia: 'Dashboard de atribuição é um dos mais complexos. Faz algo que o Marcos consiga usar sozinho.'"
+    steps:
+      - "Criar página de overview (spend, conversões, ROI por canal)"
+      - "Criar comparativo de modelos de atribuição"
+      - "Criar drill-down por campanha"
+      - "Adicionar filtros de período e segmento"
+      - "Criar visualização de jornadas"
+      - "Adicionar simulador de budget"
+    successCriteria:
+      - "Dashboard funcional"
+      - "Comparativo de modelos"
+      - "Filtros e drill-down"
+
+  - id: 8
+    title: "Apresentação pro cliente"
+    description: "O CEO da FitLife quer ver resultados: 'Gastei R$500k mês passado. Quanto voltou de cada canal? Onde devo investir mais? Onde cortar?' A Patrícia quer uma apresentação impactante."
+    context: "Stakeholder final. Patrícia: 'CEO não quer ver Markov Chains. Quer saber onde colocar o dinheiro.'"
+    steps:
+      - "Criar sumário executivo (principais descobertas)"
+      - "Mostrar problema: por que os reports estavam errados"
+      - "Apresentar metodologia (1 slide, sem tecniquice)"
+      - "Mostrar ROI real por canal"
+      - "Recomendar realocação de budget"
+      - "Estimar impacto da otimização"
+    successCriteria:
+      - "Apresentação clara e executiva"
+      - "Recomendações acionáveis"
+      - "Impacto estimado"

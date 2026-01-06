@@ -1,0 +1,159 @@
+id: eda-real-estate
+title: "Análise de Aluguéis da RentFlow"
+description: "Você entrou como Analista de Dados Junior na RentFlow, uma proptech que conecta inquilinos a proprietários. O time de produto quer entender melhor o mercado de aluguéis em São Paulo pra lançar novas features. Sua missão: fazer uma Análise Exploratória de Dados completa e extrair insights acionáveis que guiem as decisões de produto."
+category: analytics-engineer
+stack:
+  - Python
+  - Pandas
+  - Matplotlib
+  - Seaborn
+  - Jupyter
+difficulty: beginner
+estimatedHours: 8
+totalTasks: 8
+
+context:
+  company: "RentFlow"
+  role: "Analista de Dados Junior"
+  team:
+    - name: "Camila"
+      role: "Head of Analytics"
+      description: "Sua mentora. Experiente em product analytics, vai te guiar nas metodologias e storytelling com dados."
+    - name: "Lucas"
+      role: "Product Manager"
+      description: "Seu principal stakeholder. Quer dados pra priorizar features e convencer investidores."
+    - name: "Mariana"
+      role: "CEO"
+      description: "Fundadora. Quer expandir pra novas regiões mas precisa entender melhor o mercado atual."
+  situation: "A RentFlow tem dados de 50 mil imóveis pra alugar em SP, mas ninguém olha esses dados de forma sistemática. O Lucas toma decisões no feeling, a Mariana não sabe pra quais bairros expandir. Você foi contratado pra trazer clareza. É seu primeiro projeto de analytics - prove seu valor."
+
+tasks:
+  - id: 1
+    title: "Setup e primeiro contato com os dados"
+    description: "Primeiro dia! A Camila te passou o dataset de imóveis: 'Antes de qualquer análise, preciso que você conheça os dados. Carrega, explora, me conta o que tem aí.' Os dados estão em data/imoveis_sp.csv."
+    context: "Onboarding. Camila: 'EDA é sobre curiosidade. Faz perguntas pros dados. O que tem? O que falta? O que parece estranho?'"
+    steps:
+      - "Configurar ambiente Jupyter com pandas, matplotlib, seaborn"
+      - "Carregar o dataset com pandas"
+      - "Explorar shape, dtypes, head, tail"
+      - "Verificar valores nulos por coluna"
+      - "Identificar colunas categóricas vs numéricas"
+      - "Documentar primeiras impressões"
+    successCriteria:
+      - "Notebook configurado"
+      - "Dataset carregado e explorado"
+      - "Overview do dataset documentado"
+
+  - id: 2
+    title: "Limpeza e tratamento de dados"
+    description: "A Camila revisou sua exploração: 'Vi que tem dados sujos - preços absurdos, áreas negativas, bairros com nomes errados. Limpa isso antes de analisar. Dados ruins = insights errados.'"
+    context: "Data quality. Camila mostrou exemplos: aluguel de R$1 (erro), área de -50m2 (impossível), 'Jardins' vs 'Jd.' vs 'JARDINS' (mesmo bairro)."
+    steps:
+      - "Identificar outliers em preço (IQR ou percentis)"
+      - "Tratar valores impossíveis (area <= 0, quartos < 0)"
+      - "Padronizar nomes de bairros (lowercase, sem acentos)"
+      - "Decidir estratégia pra nulos (dropar? imputar?)"
+      - "Criar coluna preco_por_m2"
+      - "Documentar todas as decisões de limpeza"
+    successCriteria:
+      - "Outliers tratados"
+      - "Valores impossíveis corrigidos"
+      - "Bairros padronizados"
+      - "Decisões documentadas"
+
+  - id: 3
+    title: "Análise univariada: Distribuições"
+    description: "A Camila quer entender cada variável: 'Como é a distribuição de preços? E de tamanhos? Quantos quartos é mais comum? Me mostra histogramas, boxplots, estatísticas descritivas. Quero ver o formato dos dados.'"
+    context: "Fundamentos de EDA. Camila: 'Antes de correlacionar, entenda cada variável separadamente. Muitos insights vêm só de olhar distribuições.'"
+    steps:
+      - "Calcular estatísticas descritivas (mean, median, std, quartis)"
+      - "Criar histogramas pra variáveis numéricas (preço, área, quartos)"
+      - "Criar boxplots pra identificar outliers remanescentes"
+      - "Analisar distribuição de categóricas (tipo, bairro)"
+      - "Identificar assimetrias e modas"
+      - "Documentar findings de cada variável"
+    successCriteria:
+      - "Estatísticas descritivas calculadas"
+      - "Histogramas e boxplots criados"
+      - "Distribuições analisadas e documentadas"
+
+  - id: 4
+    title: "Análise bivariada: Correlações"
+    description: "O Lucas quer entender relações: 'O que influencia o preço do aluguel? É a área? O bairro? Número de quartos? Preciso saber o que faz um imóvel ser mais caro.' Hora de correlacionar."
+    context: "Reunião com Lucas. Ele quer precificar melhor os imóveis na plataforma. 'Se eu soubesse o peso de cada fator, poderia sugerir preços pros proprietários.'"
+    steps:
+      - "Calcular matriz de correlação (Pearson)"
+      - "Criar heatmap de correlações"
+      - "Scatter plots: preço vs área, preço vs quartos"
+      - "Boxplots: preço por tipo de imóvel, preço por bairro"
+      - "Identificar as variáveis mais correlacionadas com preço"
+      - "Documentar insights sobre o que influencia preço"
+    successCriteria:
+      - "Matriz de correlação calculada"
+      - "Visualizações de relações criadas"
+      - "Principais drivers de preço identificados"
+
+  - id: 5
+    title: "Análise geográfica: Mapa de preços"
+    description: "A Mariana quer expandir: 'Quais bairros têm os aluguéis mais caros? Quais são mais acessíveis? Onde tem mais oferta? Preciso entender a geografia do mercado.' Hora de analisar por região."
+    context: "Estratégia de expansão. Mariana: 'Quero focar em bairros com demanda alta e oferta baixa. Me mostra onde estão as oportunidades.'"
+    steps:
+      - "Agrupar dados por bairro"
+      - "Calcular métricas por bairro: preço médio, oferta (count), preço/m2"
+      - "Criar ranking de bairros mais caros"
+      - "Visualizar distribuição geográfica (bar charts por região)"
+      - "Identificar bairros com alta demanda/baixa oferta"
+      - "Mapear oportunidades de expansão"
+    successCriteria:
+      - "Análise por bairro completa"
+      - "Rankings criados"
+      - "Oportunidades identificadas"
+
+  - id: 6
+    title: "Segmentação de imóveis"
+    description: "O Lucas quer segmentar: 'Nem todo imóvel é igual. Tem o kitnet de estudante, o apartamento de família, a cobertura de luxo. Me ajuda a criar segmentos que façam sentido pro produto?' Hora de agrupar."
+    context: "Product thinking. Lucas: 'Se eu tiver segmentos claros, posso criar features específicas pra cada tipo de usuário.'"
+    steps:
+      - "Definir critérios de segmentação (preço, tamanho, quartos)"
+      - "Criar segmentos: econômico, padrão, premium, luxo"
+      - "Analisar características de cada segmento"
+      - "Visualizar distribuição dos segmentos"
+      - "Identificar segmento com maior potencial (volume x margem)"
+      - "Recomendar foco pro produto"
+    successCriteria:
+      - "Segmentos definidos e criados"
+      - "Características de cada segmento documentadas"
+      - "Recomendação de foco"
+
+  - id: 7
+    title: "Insights acionáveis"
+    description: "A Camila pediu: 'Dados são legais, mas o que a gente FAZ com isso? Me dá 5 insights que viram ação. Tipo: achamos X, então devemos fazer Y. Isso é o que separa analista de dashboard monkey.'"
+    context: "Storytelling. Camila: 'Insight sem ação é estatística interessante. Insight com ação é valor pro negócio.'"
+    steps:
+      - "Revisar todas as análises feitas"
+      - "Listar os principais achados"
+      - "Pra cada achado, definir: so what? E daí?"
+      - "Converter em recomendações acionáveis"
+      - "Priorizar por impacto vs esforço"
+      - "Preparar 5 insights top com ações sugeridas"
+    successCriteria:
+      - "5 insights acionáveis documentados"
+      - "Cada insight com ação clara"
+      - "Priorização feita"
+
+  - id: 8
+    title: "Apresentação executiva"
+    description: "A Mariana quer ver os resultados: 'Me apresenta o que você descobriu. Tenho 15 minutos. Sem tecniquices - me fala o que importa pro negócio.' Hora de montar a apresentação."
+    context: "Stakeholder management. Camila: 'CEO não quer ver código nem metodologia. Quer: o que descobrimos, o que significa, o que fazemos agora.'"
+    steps:
+      - "Criar deck de 10 slides máximo"
+      - "Estrutura: contexto, metodologia (1 slide), findings (5-7), recomendações"
+      - "Usar visualizações claras e impactantes"
+      - "Preparar narrativa: problema -> análise -> solução"
+      - "Antecipar perguntas da Mariana"
+      - "Ensaiar apresentação em 15 minutos"
+    successCriteria:
+      - "Deck criado e visual"
+      - "Narrativa clara"
+      - "Insights principais destacados"
+      - "Recomendações claras"
